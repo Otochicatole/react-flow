@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { NodesProvider } from "@/context/nodes-context";
+import { ProjectStoreProvider } from "@/context/project-store";
 import { ProjectProvider } from "@/context/project-context";
 import { ReactFlowProvider } from "@xyflow/react";
 
@@ -28,13 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ProjectProvider>
-          <ReactFlowProvider>
-            <NodesProvider>
+        <ProjectStoreProvider>
+          <ProjectProvider>
+            <ReactFlowProvider>
               {children}
-            </NodesProvider>
-          </ReactFlowProvider>
-        </ProjectProvider>
+            </ReactFlowProvider>
+          </ProjectProvider>
+        </ProjectStoreProvider>
       </body>
     </html>
   );

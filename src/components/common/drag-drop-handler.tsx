@@ -1,11 +1,11 @@
 'use client'
 import { useCallback, useEffect } from 'react';
 import { useReactFlow } from '@xyflow/react';
-import { useNodes } from '@/context/nodes-context';
+import { useCanvas } from '@/hooks/useCanvas';
 
 export function DragDropHandler() {
   const { screenToFlowPosition, getViewport } = useReactFlow();
-  const { addNode } = useNodes();
+  const { addNode } = useCanvas();
 
   const onDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();

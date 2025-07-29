@@ -1,0 +1,301 @@
+'use client'
+import { createContext, useReducer, ReactNode, useContext, useEffect } from 'react';
+import { type Node, type Edge, type XYPosition } from '@xyflow/react';
+import { projectRepository } from '@/services/project-repository';
+
+// ---------- TYPES ----------
+export interface FlowData {
+  nodes: Node[];
+  edges: Edge[];
+  processes: { [processId: string]: ProcessFlow };
+}
+
+export interface ProcessFlow extends FlowData {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface Project extends FlowData {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ProjectState {
+  projects: Project[];
+  currentProject: Project | null;
+  currentProcessPath: string[]; // nested process IDs
+  past: Project[]; // history for undo
+  future: Project[]; // history for redo
+}
+
+// ---------- HELPERS ----------
+const generateId = (prefix: string) => `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+export const createDefaultProject = (name: string, description?: string): Project => ({
+  id: generateId('project'),
+  name,
+  description,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  nodes: [],
+  edges: [],
+  processes: {},
+});
+
+const createDefaultProcess = (name: string, description?: string): ProcessFlow => ({
+  id: generateId('process'),
+  name,
+  description,
+  nodes: [],
+  edges: [],
+  processes: {},
+});
+
+// ---------- NESTED FLOW HELPER ----------
+const updateFlowInProject = (
+  project: Project,
+  processPath: string[],
+  updates: Partial<FlowData>,
+) => {
+  if (processPath.length === 0) {
+    return { ...project, ...updates, updatedAt: new Date() } as Project;
+  }
+
+  const newProject: Project = JSON.parse(JSON.stringify(project));
+  let current: FlowData = newProject;
+  for (let i = 0; i < processPath.length; i++) {
+    const pid = processPath[i];
+    if (!current.processes[pid]) break;
+    if (i === processPath.length - 1) {
+      current.processes[pid] = { ...current.processes[pid], ...updates } as ProcessFlow;
+    } else {
+      current = current.processes[pid];
+    }
+  }
+  newProject.updatedAt = new Date();
+  return newProject;
+};
+
+// ---------- ACTIONS ----------
+export type ProjectAction =
+  | { type: 'LOAD_PROJECTS'; projects: Project[] }
+  | { type: 'CREATE_PROJECT'; project: Project }
+  | { type: 'SELECT_PROJECT'; projectId: string }
+  | { type: 'UPDATE_NODES'; nodes: Node[] }
+  | { type: 'UPDATE_EDGES'; edges: Edge[] }
+  | { type: 'ENTER_PROCESS'; processId: string }
+  | { type: 'EXIT_PROCESS' }
+  | { type: 'NAVIGATE_ROOT' }
+  | { type: 'CREATE_PROCESS'; name: string; description?: string; position?: XYPosition }
+  | { type: 'UPDATE_PROCESS_NAME'; processId: string; newName: string }
+  | { type: 'UNDO' }
+  | { type: 'REDO' };
+
+// ---------- REDUCER ----------
+function reducer(state: ProjectState, action: ProjectAction): ProjectState {
+  // Helper to push currentProject to history when mutating
+  const pushHistory = (nextProject: Project): ProjectState => ({
+    ...state,
+    past: [...state.past, JSON.parse(JSON.stringify(state.currentProject)) as Project].slice(-50), // limit 50
+    future: [],
+    currentProject: nextProject,
+    projects: state.projects.map(p => (p.id === nextProject.id ? nextProject : p)),
+  });
+
+  switch (action.type) {
+    case 'LOAD_PROJECTS':
+      return { ...state, projects: action.projects };
+
+    case 'CREATE_PROJECT': {
+      const newProject = action.project;
+      return {
+        ...state,
+        projects: [...state.projects, newProject],
+        currentProject: newProject,
+        currentProcessPath: [],
+      };
+    }
+
+    case 'SELECT_PROJECT': {
+      const project = state.projects.find(p => p.id === action.projectId) || null;
+      return {
+        ...state,
+        currentProject: project,
+        currentProcessPath: [],
+      };
+    }
+
+    case 'UPDATE_NODES': {
+      if (!state.currentProject) return state;
+      const updatedProject = updateFlowInProject(state.currentProject, state.currentProcessPath, { nodes: action.nodes });
+      return pushHistory(updatedProject);
+    }
+
+    case 'UPDATE_EDGES': {
+      if (!state.currentProject) return state;
+      const updatedProject = updateFlowInProject(state.currentProject, state.currentProcessPath, { edges: action.edges });
+      return pushHistory(updatedProject);
+    }
+
+    case 'ENTER_PROCESS':
+      return {
+        ...state,
+        currentProcessPath: [...state.currentProcessPath, action.processId],
+      };
+
+    case 'EXIT_PROCESS':
+      return {
+        ...state,
+        currentProcessPath: state.currentProcessPath.slice(0, -1),
+      };
+
+    case 'NAVIGATE_ROOT':
+      return {
+        ...state,
+        currentProcessPath: [],
+      };
+
+    case 'CREATE_PROCESS': {
+      if (!state.currentProject) return state;
+      const { name, description, position } = action;
+      const newProcess = createDefaultProcess(name, description);
+
+      const processNode: Node = {
+        id: `process-node-${newProcess.id}`,
+        type: 'process',
+        position: position ?? { x: 300, y: 300 },
+        data: {
+          label: newProcess.name,
+          processId: newProcess.id,
+        },
+      };
+
+      let updatedProject: Project;
+      if (state.currentProcessPath.length === 0) {
+        updatedProject = {
+          ...state.currentProject,
+          nodes: [...state.currentProject.nodes, processNode],
+          processes: {
+            ...state.currentProject.processes,
+            [newProcess.id]: newProcess,
+          },
+        } as Project;
+        updatedProject.updatedAt = new Date();
+      } else {
+        updatedProject = updateFlowInProject(state.currentProject, state.currentProcessPath, {});
+        // add node to canvas flow
+        const targetFlow = state.currentProcessPath.reduce((f, pid) => f.processes[pid], updatedProject as FlowData);
+        targetFlow.nodes.push(processNode);
+        targetFlow.processes[newProcess.id] = newProcess;
+      }
+      return pushHistory(updatedProject);
+    }
+
+    case 'UPDATE_PROCESS_NAME': {
+      if (!state.currentProject) return state;
+      const { processId, newName } = action;
+
+      const deepClone: Project = JSON.parse(JSON.stringify(state.currentProject));
+
+      // recursive helper to update processes and node labels
+      const traverse = (flow: FlowData) => {
+        // update if this level has the process
+        if (flow.processes[processId]) {
+          flow.processes[processId].name = newName;
+        }
+
+        // update nodes in this flow
+        flow.nodes = flow.nodes.map(n =>
+          n.type === 'process' && (n.data as { processId?: string }).processId === processId
+            ? { ...n, data: { ...n.data, label: newName, _forceUpdate: Date.now() } }
+            : n,
+        );
+
+        // recurse into nested processes
+        Object.values(flow.processes).forEach(child => traverse(child));
+      };
+
+      traverse(deepClone);
+      deepClone.updatedAt = new Date();
+      return pushHistory(deepClone);
+    }
+
+    case 'UNDO': {
+      if (state.past.length === 0 || !state.currentProject) return state;
+      const previous = state.past[state.past.length - 1];
+      const newPast = state.past.slice(0, -1);
+      return {
+        ...state,
+        past: newPast,
+        future: [JSON.parse(JSON.stringify(state.currentProject)) as Project, ...state.future],
+        currentProject: previous,
+        projects: state.projects.map(p => (p.id === previous.id ? previous : p)),
+      };
+    }
+
+    case 'REDO': {
+      if (state.future.length === 0 || !state.currentProject) return state;
+      const next = state.future[0];
+      const newFuture = state.future.slice(1);
+      return {
+        ...state,
+        past: [...state.past, JSON.parse(JSON.stringify(state.currentProject)) as Project],
+        future: newFuture,
+        currentProject: next,
+        projects: state.projects.map(p => (p.id === next.id ? next : p)),
+      };
+    }
+
+    default:
+      return state;
+  }
+}
+
+// ---------- CONTEXT ----------
+interface StoreValue {
+  state: ProjectState;
+  dispatch: React.Dispatch<ProjectAction>;
+}
+
+const ProjectStoreContext = createContext<StoreValue | undefined>(undefined);
+
+export function ProjectStoreProvider({ children }: { children: ReactNode }) {
+  const [state, dispatch] = useReducer(reducer, {
+    projects: [],
+    currentProject: null,
+    currentProcessPath: [],
+    past: [],
+    future: [],
+  });
+
+  // Load projects from localStorage on mount
+  useEffect(() => {
+    const loaded = projectRepository.load();
+    if (loaded.length) {
+      dispatch({ type: 'LOAD_PROJECTS', projects: loaded });
+    }
+  }, []);
+
+  // Persist projects to localStorage whenever they change
+  useEffect(() => {
+    projectRepository.save(state.projects);
+  }, [state.projects]);
+
+  return (
+    <ProjectStoreContext.Provider value={{ state, dispatch }}>
+      {children}
+    </ProjectStoreContext.Provider>
+  );
+}
+
+export function useProjectStore() {
+  const ctx = useContext(ProjectStoreContext);
+  if (!ctx) {
+    throw new Error('useProjectStore must be used within ProjectStoreProvider');
+  }
+  return ctx;
+} 

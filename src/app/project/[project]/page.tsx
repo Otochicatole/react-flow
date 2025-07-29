@@ -9,16 +9,33 @@ import {
     type Edge
   } from '@xyflow/react';
   import '@xyflow/react/dist/style.css';
-  import { useState, useCallback } from 'react';
-  import { useNodes } from '@/context/nodes-context';
+  import { useState, useCallback, useEffect } from 'react';
+  import { useCanvas } from '@/hooks/useCanvas';
   import { Aside } from '@/components/layout/aside';
   import { ProjectHeader } from '@/components/layout/project-header';
   import { ProcessBreadcrumbs } from '@/components/layout/process-breadcrumbs';
   import { ContextMenu } from '@/components/common/context-menu';
   import styles from '@/components/styles/project-page.module.css';
   import { DragDropHandler } from '@/components/common/drag-drop-handler';
+  import { useParams } from 'next/navigation';
+  import { useProject } from '@/context/project-context';
   
   export default function Project() {
+    const { selectProject, currentProject, projects } = useProject();
+    const params = useParams<{ project: string }>();
+    const projectId = params.project;
+
+    // ensure correct project selected on refresh
+    useEffect(() => {
+      if (
+        projectId &&
+        projects.length > 0 &&
+        (!currentProject || currentProject.id !== projectId)
+      ) {
+        selectProject(projectId);
+      }
+    }, [projectId, projects, currentProject, selectProject]);
+
     const {
       nodes,
       edges,
@@ -29,7 +46,7 @@ import {
       deleteNode,
       deleteEdge,
       updateNodeLabel
-    } = useNodes();
+    } = useCanvas();
 
     const [contextMenu, setContextMenu] = useState<{
       isOpen: boolean;
