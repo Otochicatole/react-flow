@@ -1,5 +1,5 @@
 .aside {
-  width: 280px;
+  width: 300px;
   height: 100%;
   min-height: 100vh;
   background: var(--background-secondary);
@@ -73,6 +73,8 @@
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
+  max-width: 200px;
+  min-width: 200px;
 }
 
 .draggableNode::before {
@@ -128,12 +130,17 @@
   min-width: 0;
 }
 
+/* Truncate long labels */
 .nodeLabel {
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--text-primary);
   margin: 0 0 var(--spacing-xs) 0;
   line-height: 1.3;
+  white-space: nowrap; /* single line */
+  overflow: hidden;   /* hide overflow */
+  text-overflow: ellipsis; /* add ... */
+  max-width: 100%;
 }
 
 .nodeDescription {
@@ -148,6 +155,7 @@
 }
 
 .draggableNodeWrapper {
+  max-width: 200px;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -199,7 +207,7 @@
   padding: 5px;
   display: flex;
   height: 300px;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 /* Responsive Design */
