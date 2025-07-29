@@ -19,6 +19,8 @@ import {
   import { DragDropHandler } from '@/components/common/drag-drop-handler';
   import { useParams } from 'next/navigation';
   import { useProject } from '@/context/project-context';
+  import { CustomNodeUsageModal } from '@/components/common/custom-node-usage-modal';
+  import type { FlowData } from '@/context/project-store';
   
   export default function Project() {
     const { selectProject, currentProject, projects } = useProject();
@@ -59,6 +61,57 @@ import {
       selectedNode: null,
       selectedEdge: null
     });
+
+    type Usage = { path: string; dir: 'in' | 'out'; idPath: string[] };
+    const [usageModal, setUsageModal] = useState<{isOpen:boolean; nodeName:string; usages:Usage[]}>({isOpen:false,nodeName:'',usages:[]});
+
+    useEffect(() => {
+      const handler = (e: CustomEvent<{ nodeName: string }>) => {
+        if (!currentProject) return;
+        const targetName = e.detail.nodeName;
+        const usages: Usage[] = [];
+
+        const traverse = (flow: FlowData, breadcrumb: string[], idBreadcrumb: string[]) => {
+          let foundInCurrent = false;
+          let inDir: 'in' | 'out' | null = null;
+
+          flow.nodes.forEach(n => {
+            if (n.type === 'custom' && (n.data as { customName?: string }).customName === targetName) {
+              foundInCurrent = true;
+              const id = n.id;
+              const hasIn = edges.some(ed => ed.target === id);
+              const hasOut = edges.some(ed => ed.source === id);
+              if (hasIn && !hasOut) inDir = 'in';
+              else if (!hasIn && hasOut) inDir = 'out';
+              else inDir = 'in';
+            }
+          });
+
+          if (foundInCurrent && inDir) usages.push({ path: breadcrumb.join(' > '), dir: inDir, idPath: idBreadcrumb });
+
+          Object.values(flow.processes).forEach(proc => {
+            const p = proc as FlowData & { id: string; name: string };
+            traverse(p, [...breadcrumb, p.name], [...idBreadcrumb, p.id]);
+          });
+        };
+
+        traverse(currentProject, [currentProject.name], []);
+        setUsageModal({ isOpen: true, nodeName: targetName, usages });
+      };
+
+      window.addEventListener('customnode:dblclick', handler as EventListener);
+      return () => {
+        window.removeEventListener('customnode:dblclick', handler as EventListener);
+      };
+    }, [currentProject, edges]);
+
+    const { navigateToRoot, enterProcess } = useProject();
+
+    const handleUsageSelect = (idPath: string[]) => {
+      navigateToRoot();
+      idPath.forEach(id => enterProcess(id));
+      setUsageModal(prev => ({ ...prev, isOpen: false }));
+    };
 
     const handleNodeContextMenu = useCallback((event: React.MouseEvent, node: Node) => {
       event.preventDefault();
@@ -133,6 +186,7 @@ import {
               onDeleteEdge={deleteEdge}
               onEditNodeLabel={updateNodeLabel}
             />
+            <CustomNodeUsageModal isOpen={usageModal.isOpen} nodeName={usageModal.nodeName} usages={usageModal.usages} onClose={() => setUsageModal(prev=>({...prev,isOpen:false}))} onSelect={handleUsageSelect} />
           </div>
         </div>
       </div>

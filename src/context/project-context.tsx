@@ -96,6 +96,12 @@ export function useProject() {
   const undo = useCallback(() => dispatch({ type: 'UNDO' }), [dispatch]);
   const redo = useCallback(() => dispatch({ type: 'REDO' }), [dispatch]);
 
+  const addCustomNodeType = useCallback((node: {name:string;dir:'in'|'out'}) => {
+    dispatch({ type: 'ADD_CUSTOM_NODE_TYPE', node });
+  }, [dispatch]);
+
+  const removeCustomNodeType = useCallback((name: string) => dispatch({ type: 'REMOVE_CUSTOM_NODE_TYPE', name }), [dispatch]);
+
   // save logic & unsaved flag
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -142,5 +148,8 @@ export function useProject() {
     saveCurrentProject,
     isSaving,
     hasUnsavedChanges,
+    customNodeTypes: state.customNodeTypes,
+    addCustomNodeType,
+    removeCustomNodeType,
   } as const;
 } 

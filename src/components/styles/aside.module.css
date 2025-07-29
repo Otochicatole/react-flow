@@ -1,12 +1,13 @@
 .aside {
   width: 280px;
   height: 100%;
+  min-height: 100vh;
   background: var(--background-secondary);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   padding: var(--spacing-lg);
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .header {
@@ -28,14 +29,18 @@
   margin: 0;
 }
 
+/* --- scrollable lists --- */
 .nodeList {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
   overflow-y: auto;
+  max-height: 40vh;
+  /* allow scrolling instead of squeezing */
   scrollbar-width: thin;
   scrollbar-color: var(--border-color) transparent;
   padding-right: var(--spacing-sm);
+  flex: 0 0 auto;
 }
 
 .nodeList::-webkit-scrollbar {
@@ -67,6 +72,7 @@
   transition: all var(--transition-fast);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .draggableNode::before {
@@ -141,22 +147,77 @@
   overflow: hidden;
 }
 
+.draggableNodeWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.deleteCustom {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: color var(--transition-fast);
+}
+
+.deleteCustom:hover {
+  color: var(--color-danger);
+}
+
+/* custom section header */
+.headerCustom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.addCustomButton {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.addCustomButton:hover {
+  color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+/* custom list */
+.customList {
+  composes: nodeList;
+  padding: 5px;
+  display: flex;
+  height: 300px;
+  overflow: auto;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .aside {
     width: 240px;
     padding: var(--spacing-md);
   }
-  
+
   .draggableNode {
     padding: var(--spacing-md);
   }
-  
+
   .nodeIcon {
     width: 32px;
     height: 32px;
   }
-  
+
   .nodeDescription {
     -webkit-line-clamp: 1;
   }
@@ -167,35 +228,35 @@
     width: 200px;
     padding: var(--spacing-sm);
   }
-  
+
   .header {
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
   }
-  
+
   .title {
     font-size: var(--font-size-base);
   }
-  
+
   .subtitle {
     font-size: var(--font-size-xs);
   }
-  
+
   .draggableNode {
     padding: var(--spacing-sm);
     gap: var(--spacing-sm);
   }
-  
+
   .nodeIcon {
     width: 28px;
     height: 28px;
   }
-  
+
   .nodeLabel {
     font-size: var(--font-size-xs);
   }
-  
+
   .nodeDescription {
     display: none;
   }
-} 
+}

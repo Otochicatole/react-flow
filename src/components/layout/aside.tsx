@@ -1,14 +1,20 @@
 'use client'
-import { 
-  Zap, 
-  Send, 
-  Search, 
-  Database, 
-  Cog, 
+import {
+  Zap,
+  Send,
+  Search,
+  Database,
+  Cog,
   MessageSquare,
-  Layers
+  Layers,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import styles from '@/components/styles/aside.module.css';
+import { useProject } from '@/context/project-context';
+import { useState } from 'react';
+import { CreateCustomNodeModal } from '@/components/common/create-custom-node-modal';
+import { DeleteCustomNodeModal } from '@/components/common/delete-custom-node-modal';
 
 interface NodeTypeItem {
   type: string;
@@ -103,6 +109,10 @@ function DraggableNode({ type, label, icon, description, color }: DraggableNodeP
 }
 
 export function Aside() {
+  const { customNodeTypes, removeCustomNodeType } = useProject();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [deleteState,setDeleteState]=useState<{open:boolean;name:string}>({open:false,name:''});
+
   return (
     <aside className={styles.aside}>
       <div className={styles.header}>
@@ -122,6 +132,34 @@ export function Aside() {
           />
         ))}
       </div>
+
+      {/* Custom nodes section */}
+      <div className={styles.headerCustom}>
+        <h2 className={styles.title}>Custom Nodes</h2>
+        <button className={styles.addCustomButton} onClick={() => setModalOpen(true)} title="Add custom node">
+          <Plus size={16} />
+        </button>
+      </div>
+
+      <div className={styles.customList}>
+        {customNodeTypes.map(({name,dir}) => (
+          <div className={styles.draggableNodeWrapper} key={name}>
+            <DraggableNode
+              type={`custom::${name}::${dir}`}
+              label={name}
+              icon={<Layers size={18} />}
+              description={`Custom ${dir==='in'?'input':'output'} node`}
+              color="#64748b"
+            />
+            <button className={styles.deleteCustom} onClick={(e)=>{e.stopPropagation(); setDeleteState({open:true,name});}} title="Delete custom node">
+              <Trash2 size={14}/>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <CreateCustomNodeModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+      <DeleteCustomNodeModal isOpen={deleteState.open} nodeName={deleteState.name} onClose={()=>setDeleteState({open:false,name:''})} onConfirm={()=>removeCustomNodeType(deleteState.name)} />
     </aside>
   );
 } 

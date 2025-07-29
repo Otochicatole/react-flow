@@ -2,6 +2,7 @@
 import { createContext, useReducer, ReactNode, useContext, useEffect } from 'react';
 import { type Node, type Edge, type XYPosition } from '@xyflow/react';
 import { projectRepository } from '@/services/project-repository';
+import { customNodeRepository } from '@/services/custom-node-repository';
 
 // ---------- TYPES ----------
 export interface FlowData {
@@ -30,6 +31,7 @@ export interface ProjectState {
   currentProcessPath: string[]; // nested process IDs
   past: Project[]; // history for undo
   future: Project[]; // history for redo
+  customNodeTypes: {name:string;dir:'in'|'out'}[];
 }
 
 // ---------- HELPERS ----------
@@ -93,7 +95,9 @@ export type ProjectAction =
   | { type: 'CREATE_PROCESS'; name: string; description?: string; position?: XYPosition }
   | { type: 'UPDATE_PROCESS_NAME'; processId: string; newName: string }
   | { type: 'UNDO' }
-  | { type: 'REDO' };
+  | { type: 'REDO' }
+  | { type: 'ADD_CUSTOM_NODE_TYPE'; node: {name:string;dir:'in'|'out'} }
+  | { type: 'REMOVE_CUSTOM_NODE_TYPE'; name: string };
 
 // ---------- REDUCER ----------
 function reducer(state: ProjectState, action: ProjectAction): ProjectState {
@@ -250,6 +254,44 @@ function reducer(state: ProjectState, action: ProjectAction): ProjectState {
       };
     }
 
+    case 'ADD_CUSTOM_NODE_TYPE': {
+      if (state.customNodeTypes.some(n=>n.name===action.node.name)) return state;
+      const updated = [...state.customNodeTypes, action.node];
+      return { ...state, customNodeTypes: updated };
+    }
+
+    case 'REMOVE_CUSTOM_NODE_TYPE': {
+      if (!state.currentProject) return state;
+      const name = action.name;
+      // helper to deep clone and clean nodes
+      const clone: Project = JSON.parse(JSON.stringify(state.currentProject));
+
+      const cleanFlow = (flow: FlowData) => {
+        const removedIds: Set<string> = new Set();
+        flow.nodes = flow.nodes.filter(n => {
+          const match = n.type === 'custom' && (n.data as { customName?: string }).customName === name;
+          if (match) removedIds.add(n.id);
+          return !match;
+        });
+        flow.edges = flow.edges.filter(e => !removedIds.has(e.source) && !removedIds.has(e.target));
+        Object.values(flow.processes).forEach(proc => cleanFlow(proc));
+      };
+
+      cleanFlow(clone);
+      clone.updatedAt = new Date();
+
+      const updatedCustoms = state.customNodeTypes.filter(n => n.name !== name);
+
+      return {
+        ...state,
+        customNodeTypes: updatedCustoms,
+        currentProject: clone,
+        projects: state.projects.map(p => (p.id === clone.id ? clone : p)),
+        past: [...state.past, JSON.parse(JSON.stringify(state.currentProject)) as Project].slice(-50),
+        future: [],
+      };
+    }
+
     default:
       return state;
   }
@@ -270,6 +312,7 @@ export function ProjectStoreProvider({ children }: { children: ReactNode }) {
     currentProcessPath: [],
     past: [],
     future: [],
+    customNodeTypes: [],
   });
 
   // Load projects from localStorage on mount
@@ -278,12 +321,18 @@ export function ProjectStoreProvider({ children }: { children: ReactNode }) {
     if (loaded.length) {
       dispatch({ type: 'LOAD_PROJECTS', projects: loaded });
     }
+    const customNodes = customNodeRepository.load();
+    customNodes.forEach(node => dispatch({ type: 'ADD_CUSTOM_NODE_TYPE', node }));
   }, []);
 
   // Persist projects to localStorage whenever they change
   useEffect(() => {
     projectRepository.save(state.projects);
   }, [state.projects]);
+
+  useEffect(() => {
+    customNodeRepository.save(state.customNodeTypes);
+  }, [state.customNodeTypes]);
 
   return (
     <ProjectStoreContext.Provider value={{ state, dispatch }}>

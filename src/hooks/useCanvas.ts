@@ -99,7 +99,16 @@ export function useCanvas() {
   const addNode = useCallback(
     (type: string, position: XYPosition) => {
       if (!currentProject) return;
-      if (type === 'process') {
+      if (type.startsWith('custom::')) {
+        const [,customName,dir] = type.split('::');
+        const newNode = {
+          id: generateId('node'),
+          type: 'custom',
+          position,
+          data: { label: customName, customName, dir },
+        } as Node;
+        dispatch({ type: 'UPDATE_NODES', nodes: [...nodes, newNode] });
+      } else if (type === 'process') {
         const count = nodes.filter(n => n.type === 'process').length + 1;
         dispatch({ type: 'CREATE_PROCESS', name: `Process ${count}`, description: 'New process description', position });
       } else {
