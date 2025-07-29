@@ -19,7 +19,7 @@ export function ProcessNode({ data, selected }: ProcessNodeProps) {
 
   const handleDoubleClick = () => {
     if (data.processId) {
-      enterProcess(data.processId, data.label);
+      enterProcess(data.processId);
     }
   };
 

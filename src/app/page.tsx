@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, FolderOpen, Trash2, Calendar, FileText } from 'lucide-react';
-import { useProject, type Project } from '@/context/project-context';
+import { useProject } from '@/context/project-context';
+import { type Project } from '@/context/project-store';
 import { CreateProjectModal } from '@/components/common/create-project-modal';
 import { DeleteProjectModal } from '@/components/common/delete-project-modal';
 import styles from '@/components/styles/home-page.module.css';

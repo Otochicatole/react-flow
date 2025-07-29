@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useEffect } from 'react';
 import { AlertTriangle, X } from 'lucide-react';
-import { type Project } from '@/context/project-context';
+import { type Project } from '@/context/project-store';
 import styles from '@/components/styles/delete-project-modal.module.css';
 
 interface DeleteProjectModalProps {
