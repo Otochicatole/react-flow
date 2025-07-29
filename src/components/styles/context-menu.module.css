@@ -1,0 +1,94 @@
+.contextMenu {
+  position: fixed;
+  background: var(--background-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-xs);
+  min-width: 160px;
+  z-index: 1500;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  padding: var(--spacing-md);
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.menuItem:hover {
+  background: var(--background-tertiary);
+  color: var(--text-primary);
+}
+
+.menuItem:focus {
+  outline: none;
+  background: var(--background-tertiary);
+  color: var(--text-primary);
+}
+
+.menuItem span {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.menuItem svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.menuItem:hover svg {
+  opacity: 1;
+}
+
+.editContainer {
+  padding: var(--spacing-xs);
+}
+
+.editInput {
+  width: 100%;
+  padding: var(--spacing-md);
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.editInput:focus {
+  border-color: var(--color-primary);
+}
+
+.editInput::placeholder {
+  color: var(--text-muted);
+}
+
+/* Animation */
+.contextMenu {
+  animation: contextMenuAppear var(--transition-fast) ease-out;
+}
+
+@keyframes contextMenuAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+} 

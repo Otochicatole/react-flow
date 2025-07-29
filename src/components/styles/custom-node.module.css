@@ -1,0 +1,80 @@
+.node {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: var(--background-secondary);
+  min-width: 100px;
+  text-align: center;
+  transition: border-color var(--transition-fast);
+  position: relative;
+}
+
+.node:hover {
+  border-color: var(--color-neutral-500);
+}
+
+.nodeSelected {
+  border-color: var(--color-primary);
+  background: var(--background-tertiary);
+}
+
+.handle {
+  background: var(--color-neutral-600);
+  border: 1px solid var(--background-secondary);
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  position: absolute;
+}
+
+/* Show handles only on node hover */
+.node:hover .handle {
+  opacity: 1;
+}
+
+.handle:hover {
+  background: var(--color-primary);
+}
+
+.handleSource {
+  background: var(--color-success);
+}
+
+.handleTarget {
+  background: var(--color-danger);
+}
+
+/* Proper handle positioning - touching the node edges */
+.handle[data-handlepos="top"] {
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.handle[data-handlepos="bottom"] {
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.handle[data-handlepos="left"] {
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.handle[data-handlepos="right"] {
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--text-secondary);
+  user-select: none;
+  letter-spacing: 0.01em;
+} 

@@ -1,0 +1,157 @@
+/* Base node styles */
+.node {
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  min-width: 100px;
+  text-align: center;
+  transition: border-color var(--transition-fast);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  border: 1px solid var(--border-color);
+  background: var(--background-secondary);
+}
+
+.node:hover {
+  border-color: var(--color-neutral-500);
+}
+
+.nodeSelected {
+  border-color: var(--color-primary);
+  background: var(--background-tertiary);
+}
+
+/* Node icon styling */
+.nodeIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Node label styling */
+.label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  user-select: none;
+  letter-spacing: 0.01em;
+}
+
+/* Handle styles */
+.handle {
+  background: var(--color-neutral-600);
+  border: 1px solid var(--background-secondary);
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  position: absolute;
+}
+
+.node:hover .handle {
+  opacity: 1;
+}
+
+.handle:hover {
+  background: var(--color-primary);
+}
+
+.handleSource {
+  background: var(--color-success);
+}
+
+.handleTarget {
+  background: var(--color-danger);
+}
+
+/* Event Node - triggers */
+.eventNode {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), var(--background-secondary));
+}
+
+.eventNode:hover {
+  border-color: #2563eb;
+}
+
+.eventNode.nodeSelected {
+  border-color: #1d4ed8;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), var(--background-tertiary));
+}
+
+/* Command Node - actions */
+.commandNode {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), var(--background-secondary));
+}
+
+.commandNode:hover {
+  border-color: #d97706;
+}
+
+.commandNode.nodeSelected {
+  border-color: #b45309;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), var(--background-tertiary));
+}
+
+/* Query Node - data retrieval */
+.queryNode {
+  border-color: #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), var(--background-secondary));
+}
+
+.queryNode:hover {
+  border-color: #059669;
+}
+
+.queryNode.nodeSelected {
+  border-color: #047857;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), var(--background-tertiary));
+}
+
+/* Aggregate Node - domain entities */
+.aggregateNode {
+  border-color: #8b5cf6;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), var(--background-secondary));
+}
+
+.aggregateNode:hover {
+  border-color: #7c3aed;
+}
+
+.aggregateNode.nodeSelected {
+  border-color: #6d28d9;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), var(--background-tertiary));
+}
+
+/* Service Node - application services */
+.serviceNode {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), var(--background-secondary));
+}
+
+.serviceNode:hover {
+  border-color: #dc2626;
+}
+
+.serviceNode.nodeSelected {
+  border-color: #b91c1c;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), var(--background-tertiary));
+}
+
+/* Message Bus Node - communication */
+.messageBusNode {
+  border-color: #06b6d4;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), var(--background-secondary));
+}
+
+.messageBusNode:hover {
+  border-color: #0891b2;
+}
+
+.messageBusNode.nodeSelected {
+  border-color: #0e7490;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), var(--background-tertiary));
+} 
