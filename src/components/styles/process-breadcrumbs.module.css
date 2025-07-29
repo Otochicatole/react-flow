@@ -1,0 +1,167 @@
+.breadcrumbs {
+  background: var(--background-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-md) var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  min-height: 48px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.breadcrumbButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+.breadcrumbButton:hover:not(:disabled) {
+  background: var(--background-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.breadcrumbButton:disabled {
+  cursor: default;
+}
+
+.breadcrumbButton.current {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.breadcrumbButton.current:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.breadcrumbButton:hover .icon,
+.breadcrumbButton.current .icon {
+  opacity: 1;
+}
+
+.label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.level {
+  background: rgba(255, 255, 255, 0.2);
+  color: inherit;
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.breadcrumbButton.current .level {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.separator {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.currentLevel {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--background-tertiary);
+  border-radius: var(--border-radius-sm);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .breadcrumbs {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    min-height: 40px;
+  }
+  
+  .breadcrumbButton {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    max-width: 120px;
+  }
+  
+  .label {
+    font-size: var(--font-size-xs);
+  }
+  
+  .level {
+    display: none;
+  }
+  
+  .info {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumbs {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .breadcrumbButton {
+    padding: var(--spacing-xs);
+    max-width: 80px;
+  }
+  
+  .label {
+    display: none;
+  }
+  
+  .breadcrumbButton .icon {
+    margin: 0;
+  }
+} 

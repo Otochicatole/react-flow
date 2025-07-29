@@ -3,15 +3,34 @@ import { createContext, useContext, useCallback, useState, ReactNode, useEffect 
 import { type Node, type Edge } from '@xyflow/react';
 import { syncProjectToServer } from '@/services/project-api';
 
-// Project interface
-export interface Project {
+// Common interface for flow data
+export interface FlowData {
+  nodes: Node[];
+  edges: Edge[];
+  processes: { [processId: string]: ProcessFlow };
+}
+
+// Process interface for nested flows
+export interface ProcessFlow extends FlowData {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+// Project interface with nested processes support
+export interface Project extends FlowData {
   id: string;
   name: string;
   description?: string;
   createdAt: Date;
   updatedAt: Date;
-  nodes: Node[];
-  edges: Edge[];
+}
+
+// Navigation breadcrumb interface
+export interface ProcessBreadcrumb {
+  id: string;
+  name: string;
+  level: number;
 }
 
 // Project context interface
@@ -26,9 +45,20 @@ interface ProjectContextType {
   selectProject: (projectId: string) => void;
   updateProject: (projectId: string, updates: Partial<Omit<Project, 'id' | 'createdAt'>>) => void;
   
-  // Current project data
+  // Current project data (can be root or nested process)
+  currentNodes: Node[];
+  currentEdges: Edge[];
   updateCurrentProjectNodes: (nodes: Node[]) => void;
   updateCurrentProjectEdges: (edges: Edge[]) => void;
+  
+  // Process navigation
+  currentProcessPath: string[]; // Array of process IDs representing the current path
+  breadcrumbs: ProcessBreadcrumb[];
+  enterProcess: (processId: string, processName: string) => void;
+  exitProcess: () => void;
+  navigateToRoot: () => void;
+  createProcess: (name: string, description?: string) => string;
+  updateProcessName: (processId: string, newName: string) => void;
   
   // Save functionality
   saveCurrentProject: () => Promise<{ success: boolean; message: string }>;
@@ -38,6 +68,7 @@ interface ProjectContextType {
 
 // Helper functions
 const generateProjectId = () => `project_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+const generateProcessId = () => `process_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
 const createDefaultProject = (name: string, description?: string): Project => ({
   id: generateProjectId(),
@@ -58,11 +89,40 @@ const createDefaultProject = (name: string, description?: string): Project => ({
       targetHandle: 'left'
     }
   ],
+  processes: {}
 });
+
+const createDefaultProcess = (name: string, description?: string): ProcessFlow => ({
+  id: generateProcessId(),
+  name,
+  description,
+  nodes: [
+    { id: 'process-start', type: 'event', position: { x: 200, y: 150 }, data: { label: 'Process Start' } },
+  ],
+  edges: [],
+  processes: {}
+});
+
+// Helper function to get current flow data based on process path
+const getCurrentFlow = (project: Project, processPath: string[]): FlowData => {
+  if (processPath.length === 0) return project;
+  
+  let currentFlow: FlowData = project;
+  for (const processId of processPath) {
+    if (currentFlow.processes[processId]) {
+      currentFlow = currentFlow.processes[processId];
+    } else {
+      // Invalid path, return to root
+      return project;
+    }
+  }
+  return currentFlow;
+};
 
 // Local storage helpers
 const STORAGE_KEY = 'react-flow-projects';
 const CURRENT_PROJECT_KEY = 'react-flow-current-project';
+const CURRENT_PROCESS_PATH_KEY = 'react-flow-current-process-path';
 const LAST_SAVED_KEY = 'react-flow-last-saved';
 
 const saveProjectsToStorage = (projects: Project[]) => {
@@ -83,6 +143,7 @@ const loadProjectsFromStorage = (): Project[] => {
         ...project,
         createdAt: new Date(project.createdAt),
         updatedAt: new Date(project.updatedAt),
+        processes: project.processes || {} // Ensure processes exists
       }));
     }
   } catch (error) {
@@ -109,6 +170,24 @@ const loadCurrentProjectId = (): string | null => {
   } catch (error) {
     console.warn('Failed to load current project from localStorage:', error);
     return null;
+  }
+};
+
+const saveCurrentProcessPath = (processPath: string[]) => {
+  try {
+    localStorage.setItem(CURRENT_PROCESS_PATH_KEY, JSON.stringify(processPath));
+  } catch (error) {
+    console.warn('Failed to save current process path to localStorage:', error);
+  }
+};
+
+const loadCurrentProcessPath = (): string[] => {
+  try {
+    const stored = localStorage.getItem(CURRENT_PROCESS_PATH_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.warn('Failed to load current process path from localStorage:', error);
+    return [];
   }
 };
 
@@ -143,8 +222,34 @@ interface ProjectProviderProps {
 export function ProjectProvider({ children }: ProjectProviderProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [currentProcessPath, setCurrentProcessPath] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Get current flow based on process path
+  const currentFlow = currentProject ? getCurrentFlow(currentProject, currentProcessPath) : null;
+  const currentNodes = currentFlow?.nodes || [];
+  const currentEdges = currentFlow?.edges || [];
+
+  // Generate breadcrumbs
+  const breadcrumbs: ProcessBreadcrumb[] = [];
+  if (currentProject) {
+    breadcrumbs.push({ id: 'root', name: currentProject.name, level: 0 });
+    
+    let tempFlow: FlowData = currentProject;
+    for (let i = 0; i < currentProcessPath.length; i++) {
+      const processId = currentProcessPath[i];
+      if (tempFlow.processes[processId]) {
+        const process = tempFlow.processes[processId];
+        breadcrumbs.push({ 
+          id: processId, 
+          name: process.name, 
+          level: i + 1 
+        });
+        tempFlow = process;
+      }
+    }
+  }
 
   // Load projects and current project on mount
   useEffect(() => {
@@ -152,10 +257,13 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     setProjects(loadedProjects);
 
     const currentProjectId = loadCurrentProjectId();
+    const processPath = loadCurrentProcessPath();
+    
     if (currentProjectId && loadedProjects.length > 0) {
       const foundProject = loadedProjects.find(p => p.id === currentProjectId);
       if (foundProject) {
         setCurrentProject(foundProject);
+        setCurrentProcessPath(processPath);
       }
     }
   }, []);
@@ -167,10 +275,14 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     }
   }, [projects]);
 
-  // Save current project ID when it changes
+  // Save current project ID and process path when they change
   useEffect(() => {
     saveCurrentProjectId(currentProject?.id || null);
   }, [currentProject]);
+
+  useEffect(() => {
+    saveCurrentProcessPath(currentProcessPath);
+  }, [currentProcessPath]);
 
   // Check for unsaved changes
   useEffect(() => {
@@ -188,6 +300,7 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     
     setProjects(prev => [...prev, newProject]);
     setCurrentProject(newProject);
+    setCurrentProcessPath([]);
     
     return newProject;
   }, []);
@@ -198,6 +311,7 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     // If we're deleting the current project, clear it
     if (currentProject?.id === projectId) {
       setCurrentProject(null);
+      setCurrentProcessPath([]);
     }
   }, [currentProject]);
 
@@ -205,6 +319,7 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     const project = projects.find(p => p.id === projectId);
     if (project) {
       setCurrentProject(project);
+      setCurrentProcessPath([]);
     }
   }, [projects]);
 
@@ -228,37 +343,180 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     }
   }, [currentProject]);
 
+  // Helper function to update nested flow data
+  const updateFlowInProject = useCallback((
+    project: Project, 
+    processPath: string[], 
+    updates: { nodes?: Node[], edges?: Edge[] }
+  ): Project => {
+    if (processPath.length === 0) {
+      // Update root level
+      return {
+        ...project,
+        ...updates,
+        updatedAt: new Date()
+      };
+    }
+
+    // Deep clone project for nested updates
+    const newProject = JSON.parse(JSON.stringify(project));
+    let currentFlow = newProject;
+
+    // Navigate to the target process
+    for (let i = 0; i < processPath.length - 1; i++) {
+      currentFlow = currentFlow.processes[processPath[i]];
+    }
+
+    // Update the target process
+    const targetProcessId = processPath[processPath.length - 1];
+    currentFlow.processes[targetProcessId] = {
+      ...currentFlow.processes[targetProcessId],
+      ...updates
+    };
+
+    newProject.updatedAt = new Date();
+    return newProject;
+  }, []);
+
   const updateCurrentProjectNodes = useCallback((nodes: Node[]) => {
     if (currentProject) {
-      const updates = { nodes, updatedAt: new Date() };
+      const updatedProject = updateFlowInProject(currentProject, currentProcessPath, { nodes });
       
       setProjects(prev => 
         prev.map(project => 
-          project.id === currentProject.id 
-            ? { ...project, ...updates }
-            : project
+          project.id === currentProject.id ? updatedProject : project
         )
       );
       
-      setCurrentProject(prev => prev ? { ...prev, ...updates } : null);
+      setCurrentProject(updatedProject);
     }
-  }, [currentProject]);
+  }, [currentProject, currentProcessPath, updateFlowInProject]);
 
   const updateCurrentProjectEdges = useCallback((edges: Edge[]) => {
     if (currentProject) {
-      const updates = { edges, updatedAt: new Date() };
+      const updatedProject = updateFlowInProject(currentProject, currentProcessPath, { edges });
       
       setProjects(prev => 
         prev.map(project => 
-          project.id === currentProject.id 
-            ? { ...project, ...updates }
-            : project
+          project.id === currentProject.id ? updatedProject : project
         )
       );
       
-      setCurrentProject(prev => prev ? { ...prev, ...updates } : null);
+      setCurrentProject(updatedProject);
     }
-  }, [currentProject]);
+  }, [currentProject, currentProcessPath, updateFlowInProject]);
+
+  const enterProcess = useCallback((processId: string, processName: string) => {
+    setCurrentProcessPath(prev => [...prev, processId]);
+  }, []);
+
+  const exitProcess = useCallback(() => {
+    setCurrentProcessPath(prev => prev.slice(0, -1));
+  }, []);
+
+  const navigateToRoot = useCallback(() => {
+    setCurrentProcessPath([]);
+  }, []);
+
+  const createProcess = useCallback((name: string, description?: string): string => {
+    if (!currentProject) return '';
+
+    const newProcess = createDefaultProcess(name, description);
+    const newProcessNode: Node = {
+      id: `process-node-${newProcess.id}`,
+      type: 'process',
+      position: { x: 300, y: 300 },
+      data: { 
+        label: name,
+        processId: newProcess.id,
+        description: description || ''
+      }
+    };
+
+    // Add process to the project structure
+    const updatedProject = updateFlowInProject(currentProject, currentProcessPath, {
+      nodes: [...currentNodes, newProcessNode]
+    });
+
+    // Add the process to the processes collection
+    if (currentProcessPath.length === 0) {
+      updatedProject.processes[newProcess.id] = newProcess;
+    } else {
+      let targetFlow: FlowData = updatedProject;
+      for (const pathProcessId of currentProcessPath) {
+        targetFlow = targetFlow.processes[pathProcessId];
+      }
+      targetFlow.processes[newProcess.id] = newProcess;
+    }
+
+    setProjects(prev => 
+      prev.map(project => 
+        project.id === currentProject.id ? updatedProject : project
+      )
+    );
+    
+    setCurrentProject(updatedProject);
+    
+    return newProcess.id;
+  }, [currentProject, currentProcessPath, currentNodes, updateFlowInProject]);
+
+  const updateProcessName = useCallback((processId: string, newName: string) => {
+    if (!currentProject) return;
+
+    // Deep clone project for updates
+    const newProject = JSON.parse(JSON.stringify(currentProject));
+    
+    // Helper function to find and update process recursively
+    const updateProcessInFlow = (flow: FlowData, pathIndex: number = 0): boolean => {
+      if (pathIndex === currentProcessPath.length) {
+        // We're at the target level, update the process
+        if (flow.processes[processId]) {
+          flow.processes[processId].name = newName;
+          return true;
+        }
+        return false;
+      }
+
+      // Navigate deeper
+      const nextProcessId = currentProcessPath[pathIndex];
+      if (flow.processes[nextProcessId]) {
+        return updateProcessInFlow(flow.processes[nextProcessId], pathIndex + 1);
+      }
+      return false;
+    };
+
+    const updated = updateProcessInFlow(newProject);
+    
+    if (updated) {
+      newProject.updatedAt = new Date();
+      
+      // Also update the corresponding node in the canvas that represents this process
+      const currentFlow = getCurrentFlow(newProject, currentProcessPath);
+      if (currentFlow && currentFlow.nodes) {
+        currentFlow.nodes = currentFlow.nodes.map(node => {
+          if (node.type === 'process' && node.data.processId === processId) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                label: newName,
+                _forceUpdate: Date.now()
+              }
+            };
+          }
+          return node;
+        });
+      }
+      
+      setProjects(prev => 
+        prev.map(project => 
+          project.id === currentProject.id ? newProject : project
+        )
+      );
+      
+      setCurrentProject(newProject);
+    }
+  }, [currentProject, currentProcessPath]);
 
   const saveCurrentProject = useCallback(async (): Promise<{ success: boolean; message: string }> => {
     if (!currentProject) {
@@ -294,8 +552,17 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
       deleteProject,
       selectProject,
       updateProject,
+      currentNodes,
+      currentEdges,
       updateCurrentProjectNodes,
       updateCurrentProjectEdges,
+      currentProcessPath,
+      breadcrumbs,
+      enterProcess,
+      exitProcess,
+      navigateToRoot,
+      createProcess,
+      updateProcessName,
       saveCurrentProject,
       isSaving,
       hasUnsavedChanges,

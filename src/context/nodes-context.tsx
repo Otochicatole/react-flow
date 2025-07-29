@@ -12,6 +12,7 @@ import {
 } from '@xyflow/react';
 import { createContext, useContext, useCallback, useState, ReactNode, useEffect } from 'react';
 import { CustomNode } from '@/components/common/custom-node';
+import { ProcessNode } from '@/components/common/process-node';
 import { 
   EventNode, 
   CommandNode, 
@@ -25,6 +26,7 @@ import { useProject } from './project-context';
 // Node types configuration
 export const nodeTypes = {
   custom: CustomNode,
+  process: ProcessNode,
   event: EventNode,
   command: CommandNode,
   query: QueryNode,
@@ -45,6 +47,7 @@ const getDefaultNodeLabel = (type: string): string => {
     aggregate: 'New Aggregate',
     service: 'New Service',
     messageBus: 'New Message Bus',
+    process: 'New Process',
     custom: 'New Node'
   };
   return labels[type as keyof typeof labels] || 'New Node';
@@ -74,14 +77,13 @@ interface NodesProviderProps {
 
 export function NodesProvider({ children }: NodesProviderProps) {
   const { 
-    currentProject, 
+    currentNodes: nodes,
+    currentEdges: edges,
     updateCurrentProjectNodes, 
-    updateCurrentProjectEdges 
+    updateCurrentProjectEdges,
+    createProcess,
+    updateProcessName
   } = useProject();
-
-  // Use project data or fallback to empty arrays
-  const nodes = currentProject?.nodes || [];
-  const edges = currentProject?.edges || [];
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
@@ -108,16 +110,23 @@ export function NodesProvider({ children }: NodesProviderProps) {
   );
 
   const addNode = useCallback((type: string, position: XYPosition) => {
-    const newNode: Node = {
-      id: generateNodeId(),
-      type,
-      position,
-      data: { label: getDefaultNodeLabel(type) },
-    };
+    if (type === 'process') {
+      // Create a new process with a default name
+      const processName = `Process ${nodes.filter(n => n.type === 'process').length + 1}`;
+      createProcess(processName, 'New process description');
+    } else {
+      // Create a regular node
+      const newNode: Node = {
+        id: generateNodeId(),
+        type,
+        position,
+        data: { label: getDefaultNodeLabel(type) },
+      };
 
-    const updatedNodes = [...nodes, newNode];
-    updateCurrentProjectNodes(updatedNodes);
-  }, [nodes, updateCurrentProjectNodes]);
+      const updatedNodes = [...nodes, newNode];
+      updateCurrentProjectNodes(updatedNodes);
+    }
+  }, [nodes, updateCurrentProjectNodes, createProcess]);
 
   const deleteNode = useCallback((nodeId: string) => {
     const updatedNodes = nodes.filter(node => node.id !== nodeId);
@@ -133,13 +142,35 @@ export function NodesProvider({ children }: NodesProviderProps) {
   }, [edges, updateCurrentProjectEdges]);
 
   const updateNodeLabel = useCallback((nodeId: string, newLabel: string) => {
-    const updatedNodes = nodes.map(node => 
-      node.id === nodeId 
-        ? { ...node, data: { ...node.data, label: newLabel } }
-        : node
-    );
+    const targetNode = nodes.find(node => node.id === nodeId);
+    if (!targetNode) return;
+    
+    // Create updated nodes with the new label
+    const updatedNodes = nodes.map(node => {
+      if (node.id === nodeId) {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            label: newLabel,
+            _forceUpdate: Date.now()
+          }
+        };
+      }
+      return node;
+    });
+    
+    // Update nodes first
     updateCurrentProjectNodes(updatedNodes);
-  }, [nodes, updateCurrentProjectNodes]);
+
+    // If it's a process node, also update the process name immediately
+    if (targetNode.type === 'process') {
+      const processData = targetNode.data as { processId?: string };
+      if (processData.processId) {
+        updateProcessName(processData.processId, newLabel);
+      }
+    }
+  }, [nodes, updateCurrentProjectNodes, updateProcessName]);
 
   return (
     <NodesContext.Provider value={{

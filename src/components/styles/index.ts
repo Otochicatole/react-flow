@@ -8,6 +8,8 @@ export { default as homePageStyles } from './home-page.module.css';
 export { default as createProjectModalStyles } from './create-project-modal.module.css';
 export { default as deleteProjectModalStyles } from './delete-project-modal.module.css';
 export { default as projectHeaderStyles } from './project-header.module.css';
+export { default as processNodeStyles } from './process-node.module.css';
+export { default as processBreadcrumbsStyles } from './process-breadcrumbs.module.css';
 
 // Variables are imported globally through globals.css
 // but you can also import them directly if needed:

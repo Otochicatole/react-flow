@@ -7,7 +7,16 @@ import styles from '@/components/styles/project-header.module.css';
 
 export function ProjectHeader() {
   const router = useRouter();
-  const { currentProject, saveCurrentProject, isSaving, hasUnsavedChanges } = useProject();
+  const { 
+    currentProject, 
+    breadcrumbs, 
+    currentProcessPath,
+    currentNodes,
+    currentEdges,
+    saveCurrentProject, 
+    isSaving, 
+    hasUnsavedChanges 
+  } = useProject();
   const [saveMessage, setSaveMessage] = useState<string>('');
 
   const handleBackToHome = () => {
@@ -33,6 +42,32 @@ export function ProjectHeader() {
     }).format(date);
   };
 
+  // Get current display name and context
+  const getCurrentDisplayInfo = () => {
+    if (!currentProject) {
+      return {
+        name: 'No Project Selected',
+        description: 'Please select a project to continue',
+        isInProcess: false,
+        currentLevel: 0
+      };
+    }
+
+    const currentBreadcrumb = breadcrumbs[breadcrumbs.length - 1];
+    const isInProcess = currentProcessPath.length > 0;
+
+    return {
+      name: currentBreadcrumb?.name || currentProject.name,
+      description: isInProcess 
+        ? `Process in ${currentProject.name}` 
+        : currentProject.description,
+      isInProcess,
+      currentLevel: currentBreadcrumb?.level || 0
+    };
+  };
+
+  const displayInfo = getCurrentDisplayInfo();
+
   if (!currentProject) {
     return (
       <header className={styles.header}>
@@ -43,8 +78,8 @@ export function ProjectHeader() {
           </button>
           
           <div className={styles.projectInfo}>
-            <h1 className={styles.projectName}>No Project Selected</h1>
-            <p className={styles.projectMeta}>Please select a project to continue</p>
+            <h1 className={styles.projectName}>{displayInfo.name}</h1>
+            <p className={styles.projectMeta}>{displayInfo.description}</p>
           </div>
           
           <div className={styles.actions}>
@@ -65,7 +100,12 @@ export function ProjectHeader() {
         
         <div className={styles.projectInfo}>
           <div className={styles.projectNameContainer}>
-            <h1 className={styles.projectName}>{currentProject.name}</h1>
+            <h1 className={styles.projectName}>{displayInfo.name}</h1>
+            {displayInfo.isInProcess && (
+              <span className={styles.processIndicator}>
+                L{displayInfo.currentLevel}
+              </span>
+            )}
             {hasUnsavedChanges && (
               <div className={styles.unsavedIndicator} title="You have unsaved changes">
                 <Circle size={8} className={styles.unsavedDot} />
@@ -73,15 +113,13 @@ export function ProjectHeader() {
             )}
           </div>
           <div className={styles.projectMeta}>
-            {currentProject.description && (
-              <span className={styles.description}>{currentProject.description}</span>
-            )}
+            <span className={styles.description}>{displayInfo.description}</span>
             <div className={styles.stats}>
               <span className={styles.stat}>
-                {currentProject.nodes.length} nodes
+                {currentNodes.length} nodes
               </span>
               <span className={styles.stat}>
-                {currentProject.edges.length} connections
+                {currentEdges.length} connections
               </span>
               <div className={styles.lastUpdated}>
                 <Calendar size={14} />

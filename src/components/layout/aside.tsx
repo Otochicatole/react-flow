@@ -1,10 +1,19 @@
 'use client'
+import { 
+  Zap, 
+  Send, 
+  Search, 
+  Database, 
+  Cog, 
+  MessageSquare,
+  Layers
+} from 'lucide-react';
 import styles from '@/components/styles/aside.module.css';
 
-export interface NodeTypeItem {
+interface NodeTypeItem {
   type: string;
   label: string;
-  icon: string;
+  icon: React.ReactNode;
   description: string;
   color: string;
 }
@@ -13,52 +22,63 @@ const nodeTypes: NodeTypeItem[] = [
   {
     type: 'event',
     label: 'Event',
-    icon: '📢',
-    description: 'System triggers',
-    color: '#3b82f6'
+    icon: <Zap size={18} />,
+    description: 'Domain events that represent something that happened',
+    color: '#10b981'
   },
   {
     type: 'command',
     label: 'Command',
-    icon: '⚡',
-    description: 'Actions to execute',
-    color: '#f59e0b'
+    icon: <Send size={18} />,
+    description: 'Actions that should be performed in the system',
+    color: '#3b82f6'
   },
   {
     type: 'query',
     label: 'Query',
-    icon: '🔍',
-    description: 'Data retrieval',
-    color: '#10b981'
+    icon: <Search size={18} />,
+    description: 'Read operations to retrieve data from the system',
+    color: '#8b5cf6'
   },
   {
     type: 'aggregate',
     label: 'Aggregate',
-    icon: '🏛️',
-    description: 'Domain entities',
-    color: '#8b5cf6'
+    icon: <Database size={18} />,
+    description: 'Business logic containers that ensure consistency',
+    color: '#f59e0b'
   },
   {
     type: 'service',
     label: 'Service',
-    icon: '⚙️',
-    description: 'Application services',
+    icon: <Cog size={18} />,
+    description: 'Application services that orchestrate business logic',
     color: '#ef4444'
   },
   {
     type: 'messageBus',
     label: 'Message Bus',
-    icon: '🚌',
-    description: 'Communication channels',
+    icon: <MessageSquare size={18} />,
+    description: 'Communication infrastructure for events and commands',
     color: '#06b6d4'
+  },
+  {
+    type: 'process',
+    label: 'Process',
+    icon: <Layers size={18} />,
+    description: 'Nested process container for complex workflows',
+    color: '#14b8a6'
   }
 ];
 
 interface DraggableNodeProps {
-  nodeType: NodeTypeItem;
+  type: string;
+  label: string;
+  icon: React.ReactNode;
+  description: string;
+  color: string;
 }
 
-function DraggableNode({ nodeType }: DraggableNodeProps) {
+function DraggableNode({ type, label, icon, description, color }: DraggableNodeProps) {
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
@@ -67,14 +87,16 @@ function DraggableNode({ nodeType }: DraggableNodeProps) {
   return (
     <div
       className={styles.draggableNode}
+      onDragStart={(event) => onDragStart(event, type)}
       draggable
-      onDragStart={(e) => onDragStart(e, nodeType.type)}
-      style={{ '--node-color': nodeType.color } as React.CSSProperties}
+      style={{ '--node-color': color } as React.CSSProperties}
     >
-      <div className={styles.nodeIcon}>{nodeType.icon}</div>
-      <div className={styles.nodeInfo}>
-        <div className={styles.nodeLabel}>{nodeType.label}</div>
-        <div className={styles.nodeDescription}>{nodeType.description}</div>
+      <div className={styles.nodeIcon}>
+        {icon}
+      </div>
+      <div className={styles.nodeContent}>
+        <h4 className={styles.nodeLabel}>{label}</h4>
+        <p className={styles.nodeDescription}>{description}</p>
       </div>
     </div>
   );
@@ -83,14 +105,21 @@ function DraggableNode({ nodeType }: DraggableNodeProps) {
 export function Aside() {
   return (
     <aside className={styles.aside}>
-      <div className={styles.asideHeader}>
-        <h3 className={styles.asideTitle}>Node Types</h3>
-        <p className={styles.asideSubtitle}>Drag to canvas</p>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Node Types</h2>
+        <p className={styles.subtitle}>Drag to canvas to create</p>
       </div>
       
       <div className={styles.nodeList}>
         {nodeTypes.map((nodeType) => (
-          <DraggableNode key={nodeType.type} nodeType={nodeType} />
+          <DraggableNode
+            key={nodeType.type}
+            type={nodeType.type}
+            label={nodeType.label}
+            icon={nodeType.icon}
+            description={nodeType.description}
+            color={nodeType.color}
+          />
         ))}
       </div>
     </aside>

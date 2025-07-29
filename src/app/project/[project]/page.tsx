@@ -13,6 +13,7 @@ import {
   import { useNodes } from '@/context/nodes-context';
   import { Aside } from '@/components/layout/aside';
   import { ProjectHeader } from '@/components/layout/project-header';
+  import { ProcessBreadcrumbs } from '@/components/layout/process-breadcrumbs';
   import { ContextMenu } from '@/components/common/context-menu';
   import styles from '@/components/styles/project-page.module.css';
   import { DragDropHandler } from '@/components/common/drag-drop-handler';
@@ -79,6 +80,7 @@ import {
     return (
       <div className={styles.pageContainer}>
         <ProjectHeader />
+        <ProcessBreadcrumbs />
         
         <div className={styles.container}>
           <Aside />
