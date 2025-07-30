@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Edit3, Trash2 } from 'lucide-react';
 import { type Node, type Edge } from '@xyflow/react';
 import styles from '@/components/styles/context-menu.module.css';
@@ -29,7 +29,7 @@ export function ContextMenu({
   const [editLabel, setEditLabel] = useState('');
   const [adjustedPosition, setAdjustedPosition] = useState(position);
   const menuRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Adjust position to keep menu within viewport bounds
   useEffect(() => {
@@ -68,24 +68,51 @@ export function ContextMenu({
   }, [selectedNode, isEditing]);
 
   useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.select();
+      // Auto-resize textarea based on content
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
   }, [isEditing]);
+
+  // Auto-resize textarea as user types
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditLabel(e.target.value);
+    // Auto-resize
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  };
+
+  const handleLabelSubmit = useCallback(() => {
+    if (selectedNode && onEditNodeLabel) {
+      // Save even if empty (allows clearing labels)
+      onEditNodeLabel(selectedNode.id, editLabel.trim());
+      setIsEditing(false);
+      onClose();
+    }
+  }, [selectedNode, onEditNodeLabel, editLabel, onClose]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as HTMLElement)) {
-        onClose();
-        setIsEditing(false);
+        // If we're editing, save the changes before closing
+        if (isEditing) {
+          handleLabelSubmit();
+        } else {
+          onClose();
+        }
       }
     }
 
     function handleEscape(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        onClose();
-        setIsEditing(false);
+        if (isEditing) {
+          setIsEditing(false);
+        } else {
+          onClose();
+        }
       }
     }
 
@@ -107,7 +134,7 @@ export function ContextMenu({
       document.removeEventListener('mousedown', handleClickOutside, { capture: true });
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, isEditing, handleLabelSubmit]);
 
   const handleEditClick = () => {
     if (selectedNode) {
@@ -115,20 +142,15 @@ export function ContextMenu({
     }
   };
 
-  const handleLabelSubmit = () => {
-    if (selectedNode && onEditNodeLabel && editLabel.trim()) {
-      onEditNodeLabel(selectedNode.id, editLabel.trim());
-      setIsEditing(false);
-      onClose();
-    }
-  };
-
   const handleLabelKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
+    // Ctrl/Cmd + Enter to submit and close
+    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
       handleLabelSubmit();
     } else if (event.key === 'Escape') {
       setIsEditing(false);
     }
+    // Regular Enter adds a new line (default textarea behavior)
   };
 
   const handleDeleteNode = () => {
@@ -160,16 +182,19 @@ export function ContextMenu({
         <>
           {isEditing ? (
             <div className={styles.editContainer}>
-              <input
-                ref={inputRef}
-                type="text"
+              <textarea
+                ref={textareaRef}
                 value={editLabel}
-                onChange={(e) => setEditLabel(e.target.value)}
+                onChange={handleTextareaChange}
                 onKeyDown={handleLabelKeyDown}
                 onBlur={handleLabelSubmit}
-                className={styles.editInput}
-                placeholder="Node name..."
+                className={styles.editTextarea}
+                placeholder="Node name...&#10;(Ctrl+Enter to save)"
+                rows={1}
               />
+              <div className={styles.editHint}>
+                Ctrl+Enter to save, Esc to cancel
+              </div>
             </div>
           ) : (
             <button

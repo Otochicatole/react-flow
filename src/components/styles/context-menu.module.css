@@ -54,10 +54,13 @@
 
 .editContainer {
   padding: var(--spacing-xs);
+  min-width: 200px;
 }
 
-.editInput {
+.editTextarea {
   width: 100%;
+  min-height: 60px;
+  max-height: 200px;
   padding: var(--spacing-md);
   background: var(--background-secondary);
   border: 1px solid var(--border-color);
@@ -66,15 +69,45 @@
   font-size: var(--font-size-sm);
   font-family: inherit;
   outline: none;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.4;
   transition: border-color var(--transition-fast);
+  white-space: pre-wrap;
 }
 
-.editInput:focus {
+.editTextarea:focus {
   border-color: var(--color-primary);
 }
 
-.editInput::placeholder {
+.editTextarea::placeholder {
   color: var(--text-muted);
+  white-space: pre-line;
+}
+
+.editTextarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.editTextarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editTextarea::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--border-radius-full);
+}
+
+.editTextarea::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.editHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--spacing-xs);
+  text-align: center;
+  line-height: 1.2;
 }
 
 /* Animation */
