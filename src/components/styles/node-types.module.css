@@ -185,38 +185,47 @@
 
 /* Decision Node - conditional branching */
 .decisionNode {
-  border-color: #fbbf24;
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), var(--background-secondary));
-  transform: rotate(45deg);
-  border-radius: var(--border-radius-sm);
-  min-width: 100px;
-  min-height: 100px;
-  max-width: 140px;
-  max-height: 140px;
+  background: #d4a574;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  border: 2px solid #b8935a;
+  min-width: 140px;
+  min-height: 140px;
+  max-width: 300px;
+  padding: var(--spacing-2xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.decisionNode:hover {
+  background: #c49760;
+  border-color: #a8834f;
+}
+
+.decisionNode.nodeSelected {
+  background: #b8935a;
+  border-color: #9c7c47;
 }
 
 .decisionNode .nodeIcon,
 .decisionNode .label {
-  transform: rotate(-45deg);
-  max-width: 70px;
+  max-width: 180px;
   text-align: center;
-  overflow: hidden;
   font-size: var(--font-size-xs);
-  line-height: 1.2;
+  line-height: 1.3;
   white-space: pre-wrap;
   word-wrap: break-word;
-  max-height: 60px;
-  overflow-y: auto;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+  z-index: 1;
+  position: relative;
+  color: #1f2937;
+  font-weight: 600;
 }
 
-.decisionNode:hover {
-  border-color: #f59e0b;
-}
 
-.decisionNode.nodeSelected {
-  border-color: #d97706;
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), var(--background-tertiary));
-}
 
 /* Input/Output Node - data flow */
 .inputOutputNode {
@@ -233,6 +242,45 @@
 .inputOutputNode.nodeSelected {
   border-color: #7c3aed;
   background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), var(--background-tertiary));
+}
+
+/* Text Input Node - generic text input */
+.textInputNode {
+  border-color: #22d3ee;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-md);
+  min-width: 140px;
+  min-height: 50px;
+  padding: var(--spacing-md);
+  position: relative;
+}
+
+.textInputNode::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: #22d3ee;
+  border-radius: var(--border-radius-xs);
+}
+
+.textInputNode:hover {
+  border-color: #06b6d4;
+}
+
+.textInputNode:hover::after {
+  background: #06b6d4;
+}
+
+.textInputNode.nodeSelected {
+  border-color: #0891b2;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), var(--background-tertiary));
+}
+
+.textInputNode.nodeSelected::after {
+  background: #0891b2;
 }
 
 /* Document Node - documentation */
@@ -426,35 +474,44 @@
 
 /* Milestone Node - project milestone */
 .milestoneNode {
-  border-color: #f97316;
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), var(--background-secondary));
-  transform: rotate(45deg);
-  border-radius: var(--border-radius-sm);
-  min-width: 80px;
-  min-height: 80px;
-  max-width: 120px;
-  max-height: 120px;
+  background: #c4885a;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  border: 2px solid #a87449;
+  min-width: 120px;
+  min-height: 120px;
+  max-width: 240px;
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.milestoneNode:hover {
+  background: #b5794a;
+  border-color: #98673d;
+}
+
+.milestoneNode.nodeSelected {
+  background: #a87449;
+  border-color: #8c5f37;
 }
 
 .milestoneNode .nodeIcon,
 .milestoneNode .label {
-  transform: rotate(-45deg);
-  max-width: 60px;
+  max-width: 150px;
   text-align: center;
-  overflow: hidden;
   font-size: var(--font-size-xs);
-  line-height: 1.2;
+  line-height: 1.3;
   white-space: pre-wrap;
   word-wrap: break-word;
-  max-height: 50px;
-  overflow-y: auto;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+  z-index: 1;
+  position: relative;
+  color: #1f2937;
+  font-weight: 600;
 }
 
-.milestoneNode:hover {
-  border-color: #ea580c;
-}
-
-.milestoneNode.nodeSelected {
-  border-color: #c2410c;
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), var(--background-tertiary));
-} 
+ 

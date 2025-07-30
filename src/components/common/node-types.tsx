@@ -9,7 +9,8 @@ import {
   Zap,
   Plus,
   X,
-  Minus
+  Minus,
+  Type
 } from 'lucide-react';
 import styles from '@/components/styles/node-types.module.css';
 
@@ -236,9 +237,6 @@ export function DecisionNode({ data, selected }: BaseNodeProps) {
         id="right"
         className={`${styles.handle} ${styles.handleSource}`}
       />
-      <div className={styles.nodeIcon}>
-        <Diamond size={16} />
-      </div>
       <div className={styles.label}>{data.label}</div>
     </div>
   );
@@ -262,6 +260,30 @@ export function InputOutputNode({ data, selected }: BaseNodeProps) {
       />
       <div className={styles.nodeIcon}>
         <Square size={16} />
+      </div>
+      <div className={styles.label}>{data.label}</div>
+    </div>
+  );
+}
+
+// Text Input Node - generic text input
+export function TextInputNode({ data, selected }: BaseNodeProps) {
+  return (
+    <div className={`${styles.node} ${styles.textInputNode} ${selected ? styles.nodeSelected : ''}`}>
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="left"
+        className={`${styles.handle} ${styles.handleTarget}`}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="right"
+        className={`${styles.handle} ${styles.handleSource}`}
+      />
+      <div className={styles.nodeIcon}>
+        <Type size={16} />
       </div>
       <div className={styles.label}>{data.label}</div>
     </div>
@@ -522,9 +544,6 @@ export function MilestoneNode({ data, selected }: BaseNodeProps) {
         id="right"
         className={`${styles.handle} ${styles.handleSource}`}
       />
-      <div className={styles.nodeIcon}>
-        <Diamond size={16} />
-      </div>
       <div className={styles.label}>{data.label}</div>
     </div>
   );

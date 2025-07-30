@@ -18,6 +18,7 @@ import {
   Calendar,
   ChevronDown,
   ChevronRight,
+  Type
 } from 'lucide-react';
 import styles from '@/components/styles/aside.module.css';
 import { useProject } from '@/context/project-context';
@@ -146,6 +147,13 @@ const nodeCategories: NodeCategory[] = [
         icon: <Circle size={18} />,
         description: 'Junction point for multiple flows',
         color: '#6b7280'
+      },
+      {
+        type: 'textInput',
+        label: 'Text Input',
+        icon: <Type size={18} />,
+        description: 'Generic text input field',
+        color: '#22d3ee'
       }
     ]
   },
