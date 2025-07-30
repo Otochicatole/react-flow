@@ -181,13 +181,22 @@
   background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), var(--background-secondary));
   transform: rotate(45deg);
   border-radius: var(--border-radius-sm);
-  min-width: 80px;
-  min-height: 80px;
+  min-width: 100px;
+  min-height: 100px;
+  max-width: 140px;
+  max-height: 140px;
 }
 
 .decisionNode .nodeIcon,
 .decisionNode .label {
   transform: rotate(-45deg);
+  max-width: 70px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  line-height: 1.2;
 }
 
 .decisionNode:hover {
@@ -411,13 +420,22 @@
   background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), var(--background-secondary));
   transform: rotate(45deg);
   border-radius: var(--border-radius-sm);
-  min-width: 60px;
-  min-height: 60px;
+  min-width: 80px;
+  min-height: 80px;
+  max-width: 120px;
+  max-height: 120px;
 }
 
 .milestoneNode .nodeIcon,
 .milestoneNode .label {
   transform: rotate(-45deg);
+  max-width: 60px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  line-height: 1.2;
 }
 
 .milestoneNode:hover {
