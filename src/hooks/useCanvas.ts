@@ -1,5 +1,5 @@
 'use client'
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   addEdge,
   applyEdgeChanges,
@@ -113,8 +113,9 @@ export function useCanvas() {
   const { currentProject, currentProcessPath } = state;
 
   const currentFlow = currentProject ? getCurrentFlow(currentProject, currentProcessPath) : null;
-  const nodes: Node[] = currentFlow?.nodes || [];
-  const edges: Edge[] = currentFlow?.edges || [];
+  
+  const nodes: Node[] = useMemo(() => currentFlow?.nodes || [], [currentFlow]);
+  const edges: Edge[] = useMemo(() => currentFlow?.edges || [], [currentFlow]);
 
   // --- callbacks ---
   const onNodesChange = useCallback(

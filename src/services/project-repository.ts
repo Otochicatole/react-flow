@@ -184,7 +184,7 @@ export const projectRepository = {
           const content = e.target?.result as string;
           const data = JSON.parse(content) as ProjectExportData;
           resolve(data);
-        } catch (err) {
+        } catch {
           reject(new Error('Invalid JSON file'));
         }
       };

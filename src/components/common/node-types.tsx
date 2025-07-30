@@ -2,14 +2,10 @@ import { Handle, Position } from '@xyflow/react';
 import { 
   Play, 
   Square, 
-  Diamond, 
   FileText, 
   Database, 
   Circle,
-  Zap,
-  Plus,
   X,
-  Minus,
   Type
 } from 'lucide-react';
 import styles from '@/components/styles/node-types.module.css';
@@ -351,7 +347,7 @@ export function DatabaseNode({ data, selected }: BaseNodeProps) {
 }
 
 // Connector Node - junction point
-export function ConnectorNode({ data, selected }: BaseNodeProps) {
+export function ConnectorNode({ selected }: { selected?: boolean }) {
   return (
     <div className={`${styles.node} ${styles.connectorNode} ${selected ? styles.nodeSelected : ''}`}>
       <Handle

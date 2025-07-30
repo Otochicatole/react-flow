@@ -1,7 +1,7 @@
 'use client'
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, FolderOpen, Trash2, Calendar, FileText, Download, Upload, Share } from 'lucide-react';
+import { Plus, FolderOpen, Trash2, Calendar, Download, Upload, Share } from 'lucide-react';
 import { useProject } from '@/context/project-context';
 import { type Project } from '@/context/project-store';
 import { CreateProjectModal } from '@/components/common/create-project-modal';
@@ -71,7 +71,7 @@ export default function Home() {
         success: true
       });
       setTimeout(() => setImportStatus(prev => ({ ...prev, message: '', success: null })), 3000);
-    } catch (err) {
+    } catch {
       setImportStatus({
         loading: false,
         message: 'Failed to export projects',
@@ -91,7 +91,7 @@ export default function Home() {
         success: true
       });
       setTimeout(() => setImportStatus(prev => ({ ...prev, message: '', success: null })), 3000);
-    } catch (err) {
+    } catch {
       setImportStatus({
         loading: false,
         message: 'Failed to export project',
@@ -129,7 +129,7 @@ export default function Home() {
       }
 
       setTimeout(() => setImportStatus(prev => ({ ...prev, message: '', success: null })), 5000);
-    } catch (err) {
+    } catch {
       setImportStatus({
         loading: false,
         message: 'Failed to import projects',

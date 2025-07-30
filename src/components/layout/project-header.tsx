@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Settings, Save, Calendar, Loader2, Circle } from 'lucide-react';
+import { ArrowLeft, Save, Calendar, Loader2, Circle } from 'lucide-react';
 import { useProject } from '@/context/project-context';
 import { useState } from 'react';
 import styles from '@/components/styles/project-header.module.css';

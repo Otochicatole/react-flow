@@ -38,7 +38,7 @@ export function CustomNode({ data, selected }: CustomNodeProps) {
         className={`${styles.handle} ${styles.handleTarget}`}
         data-handlepos="top"
       />
-      
+
       {/* Bottom handles */}
       <Handle
         type="source"
@@ -54,7 +54,7 @@ export function CustomNode({ data, selected }: CustomNodeProps) {
         className={`${styles.handle} ${styles.handleTarget}`}
         data-handlepos="bottom"
       />
-      
+
       {/* Left handles */}
       <Handle
         type="source"
@@ -70,7 +70,7 @@ export function CustomNode({ data, selected }: CustomNodeProps) {
         className={`${styles.handle} ${styles.handleTarget}`}
         data-handlepos="left"
       />
-      
+
       {/* Right handles */}
       <Handle
         type="source"
@@ -86,8 +86,12 @@ export function CustomNode({ data, selected }: CustomNodeProps) {
         className={`${styles.handle} ${styles.handleTarget}`}
         data-handlepos="right"
       />
-      
-      <div className={styles.label}>{data.dir==='in'?'<-':''}{data.label}{data.dir==='out'? '->':''}</div>
+
+      <div className={styles.label}>
+        <p>{data.dir === 'in' ? 'IN' : ''}</p>
+        {data.label}
+        <p>{data.dir === 'out' ? 'OUT' : ''}</p>
+      </div>
     </div>
   );
 } 

@@ -18,7 +18,7 @@ export function DeleteCustomNodeModal({ isOpen, nodeName, onClose, onConfirm }: 
     const click = (e: MouseEvent)=>{ if(ref.current && !ref.current.contains(e.target as Node)) onClose(); };
     if(isOpen){ document.addEventListener('keydown',esc); document.addEventListener('mousedown',click); }
     return ()=>{ document.removeEventListener('keydown',esc); document.removeEventListener('mousedown',click); };
-  },[isOpen]);
+  },[isOpen, onClose]);
 
   if(!isOpen) return null;
   return (

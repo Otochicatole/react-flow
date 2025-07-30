@@ -4,7 +4,7 @@ import { useReactFlow } from '@xyflow/react';
 import { useCanvas } from '@/hooks/useCanvas';
 
 export function DragDropHandler() {
-  const { screenToFlowPosition, getViewport } = useReactFlow();
+  const { screenToFlowPosition } = useReactFlow();
   const { addNode } = useCanvas();
 
   const onDragOver = useCallback((event: DragEvent) => {

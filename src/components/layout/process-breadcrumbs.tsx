@@ -4,7 +4,7 @@ import { useProject } from '@/context/project-context';
 import styles from '@/components/styles/process-breadcrumbs.module.css';
 
 export function ProcessBreadcrumbs() {
-  const { breadcrumbs, currentProcessPath, navigateToRoot, exitProcess } = useProject();
+  const { breadcrumbs, navigateToRoot, exitProcess } = useProject();
 
   if (!breadcrumbs.length || breadcrumbs.length <= 1) {
     return null;

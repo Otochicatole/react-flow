@@ -1,8 +1,5 @@
 import { type Project } from '@/context/project-context';
 
-// Simulated API base URL
-const API_BASE_URL = '/api/projects';
-
 // Simulated delay for API calls
 const API_DELAY = 800;
 
@@ -52,7 +49,7 @@ export async function getProjects(): Promise<ApiResponse<Project[]>> {
 }
 
 // POST /api/projects - Create a new project
-export async function createProjectApi(project: Omit<Project, 'id'>): Promise<ApiResponse<Project>> {
+export async function createProjectApi(): Promise<ApiResponse<Project>> {
   await delay(API_DELAY);
   
   try {
@@ -97,7 +94,8 @@ export async function createProjectApi(project: Omit<Project, 'id'>): Promise<Ap
 }
 
 // PUT /api/projects/:id - Update an existing project
-export async function updateProjectApi(projectId: string, updates: Partial<Omit<Project, 'id' | 'createdAt'>>): Promise<ApiResponse<Project>> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function updateProjectApi(_projectId: string, _updates: Partial<Omit<Project, 'id' | 'createdAt'>>): Promise<ApiResponse<Project>> {
   await delay(API_DELAY);
   
   try {
@@ -143,7 +141,7 @@ export async function updateProjectApi(projectId: string, updates: Partial<Omit<
 }
 
 // DELETE /api/projects/:id - Delete a project
-export async function deleteProjectApi(projectId: string): Promise<ApiResponse<void>> {
+export async function deleteProjectApi(): Promise<ApiResponse<void>> {
   await delay(API_DELAY);
   
   try {

@@ -76,5 +76,10 @@
   font-weight: var(--font-weight-normal);
   color: var(--text-secondary);
   user-select: none;
+  gap: 10px;
   letter-spacing: 0.01em;
-} 
+}
+
+.label p{
+  color: #7e771f;
+}

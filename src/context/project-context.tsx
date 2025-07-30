@@ -5,7 +5,7 @@ import { useProjectStore, type Project, type FlowData, createDefaultProject } fr
 import type { XYPosition } from '@xyflow/react';
 import { type Node, type Edge } from '@xyflow/react';
 import { syncProjectToServer } from '@/services/project-api';
-import { projectRepository, type ProjectExportData } from '@/services/project-repository';
+import { projectRepository } from '@/services/project-repository';
 
 // helper to navigate nested processes
 const getCurrentFlow = (project: Project, processPath: string[]): FlowData => {
@@ -16,6 +16,9 @@ const getCurrentFlow = (project: Project, processPath: string[]): FlowData => {
   }
   return current;
 };
+
+// Re-export types from project-store
+export type { Project, FlowData } from '@/context/project-store';
 
 export interface ProcessBreadcrumb {
   id: string;

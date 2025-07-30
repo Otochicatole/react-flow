@@ -28,7 +28,7 @@ export function CreateCustomNodeModal({ isOpen, onClose }: Props) {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return setError('Name required');
-    if (customNodeTypes.some((n: any) => n.name === trimmed)) return setError('Name already exists');
+    if (customNodeTypes.some((n: { name: string }) => n.name === trimmed)) return setError('Name already exists');
     addCustomNodeType({ name: trimmed, dir });
     onClose();
   };
