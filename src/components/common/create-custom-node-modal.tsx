@@ -14,7 +14,7 @@ export function CreateCustomNodeModal({ isOpen, onClose }: Props) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const [dir,setDir]=useState<'in'|'out'>('in');
+  const [dir, setDir] = useState<'in' | 'out'>('in');
 
   useEffect(() => {
     if (isOpen) {
@@ -28,8 +28,8 @@ export function CreateCustomNodeModal({ isOpen, onClose }: Props) {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return setError('Name required');
-    if (customNodeTypes.some((n:any)=>n.name===trimmed)) return setError('Name already exists');
-    addCustomNodeType({name:trimmed,dir});
+    if (customNodeTypes.some((n: any) => n.name === trimmed)) return setError('Name already exists');
+    addCustomNodeType({ name: trimmed, dir });
     onClose();
   };
 
@@ -45,19 +45,21 @@ export function CreateCustomNodeModal({ isOpen, onClose }: Props) {
           </button>
         </div>
         <form className={styles.content} onSubmit={handleSubmit}>
-          <input
-            ref={inputRef}
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="Unique node name"
-            className={styles.input}
-          />
-          <div className={styles.switchRow}>
-            <label>Direction</label>
-            <select value={dir} onChange={e=>setDir(e.target.value as 'in'|'out')}> 
-              <option value="in">Input &lt;-</option>
-              <option value="out">Output -&gt;</option>
-            </select>
+          <div className={styles.inputContainer}>
+            <input
+              ref={inputRef}
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Unique node name"
+              className={styles.input}
+            />
+            <div className={styles.switchRow}>
+              <label>Direction:</label>
+              <select value={dir} onChange={e => setDir(e.target.value as 'in' | 'out')}>
+                <option value="in">Input &lt;-</option>
+                <option value="out">Output -&gt;</option>
+              </select>
+            </div>
           </div>
           {error && <p className={styles.error}>{error}</p>}
           <button className={styles.submitButton} type="submit">

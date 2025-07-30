@@ -40,6 +40,13 @@
   color: var(--text-primary);
   margin: 0;
 }
+.switchRow{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
 
 .closeButton {
   display: flex;
@@ -82,6 +89,15 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--text-primary);
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  gap: var(--spacing-sm);
 }
 
 .input,
@@ -136,6 +152,7 @@
   transition: all var(--transition-fast);
   border: 1px solid transparent;
   min-width: 100px;
+  margin: 12px;
 }
 
 .cancelButton {
@@ -177,6 +194,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -187,6 +205,7 @@
     opacity: 0;
     transform: scale(0.95) translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -198,26 +217,26 @@
   .overlay {
     padding: var(--spacing-md);
   }
-  
+
   .modal {
     max-width: none;
     width: 100%;
   }
-  
+
   .header {
     padding: var(--spacing-lg);
   }
-  
+
   .form {
     padding: var(--spacing-lg);
   }
-  
+
   .actions {
     flex-direction: column;
   }
-  
+
   .cancelButton,
   .submitButton {
     width: 100%;
   }
-} 
+}
