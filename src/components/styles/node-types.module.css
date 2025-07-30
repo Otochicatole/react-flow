@@ -154,4 +154,277 @@
 .messageBusNode.nodeSelected {
   border-color: #0e7490;
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), var(--background-tertiary));
+}
+
+/* === FLOWCHART NODES === */
+
+/* Start/End Node - terminal points */
+.startEndNode {
+  border-color: #34d399;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-full);
+  min-width: 120px;
+}
+
+.startEndNode:hover {
+  border-color: #10b981;
+}
+
+.startEndNode.nodeSelected {
+  border-color: #059669;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), var(--background-tertiary));
+}
+
+/* Decision Node - conditional branching */
+.decisionNode {
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), var(--background-secondary));
+  transform: rotate(45deg);
+  border-radius: var(--border-radius-sm);
+  min-width: 80px;
+  min-height: 80px;
+}
+
+.decisionNode .nodeIcon,
+.decisionNode .label {
+  transform: rotate(-45deg);
+}
+
+.decisionNode:hover {
+  border-color: #f59e0b;
+}
+
+.decisionNode.nodeSelected {
+  border-color: #d97706;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), var(--background-tertiary));
+}
+
+/* Input/Output Node - data flow */
+.inputOutputNode {
+  border-color: #a78bfa;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), var(--background-secondary));
+  clip-path: polygon(20% 0%, 80% 0%, 100% 50%, 80% 100%, 20% 100%, 0% 50%);
+  min-width: 120px;
+}
+
+.inputOutputNode:hover {
+  border-color: #8b5cf6;
+}
+
+.inputOutputNode.nodeSelected {
+  border-color: #7c3aed;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), var(--background-tertiary));
+}
+
+/* Document Node - documentation */
+.documentNode {
+  border-color: #94a3b8;
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-md) var(--border-radius-md) 0 var(--border-radius-md);
+  position: relative;
+}
+
+.documentNode::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 15px;
+  height: 15px;
+  background: var(--background-secondary);
+  border-left: 1px solid #94a3b8;
+  border-top: 1px solid #94a3b8;
+}
+
+.documentNode:hover {
+  border-color: #64748b;
+}
+
+.documentNode.nodeSelected {
+  border-color: #475569;
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.2), var(--background-tertiary));
+}
+
+/* Database Node - data storage */
+.databaseNode {
+  border-color: #fb7185;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-md);
+  position: relative;
+}
+
+.databaseNode::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 10px;
+  right: 10px;
+  height: 6px;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.3), rgba(251, 113, 133, 0.1));
+  border-radius: 50%;
+  border: 1px solid #fb7185;
+}
+
+.databaseNode:hover {
+  border-color: #f43f5e;
+}
+
+.databaseNode.nodeSelected {
+  border-color: #e11d48;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.2), var(--background-tertiary));
+}
+
+/* Connector Node - junction point */
+.connectorNode {
+  border-color: #6b7280;
+  background: var(--background-tertiary);
+  border-radius: var(--border-radius-full);
+  min-width: 24px;
+  min-height: 24px;
+  padding: var(--spacing-xs);
+}
+
+.connectorNode:hover {
+  border-color: #4b5563;
+  background: var(--background-elevated);
+}
+
+.connectorNode.nodeSelected {
+  border-color: var(--color-primary);
+  background: var(--background-elevated);
+}
+
+/* === LOGIC GATE NODES === */
+
+.logicGateNode {
+  border-color: #60a5fa;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), var(--background-secondary));
+  min-width: 100px;
+  min-height: 60px;
+  position: relative;
+}
+
+.logicGateNode:hover {
+  border-color: #3b82f6;
+}
+
+.logicGateNode.nodeSelected {
+  border-color: #2563eb;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), var(--background-tertiary));
+}
+
+.logicGateLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* AND Gate */
+.andGate {
+  border-radius: 0 var(--border-radius-full) var(--border-radius-full) 0;
+}
+
+/* OR Gate */
+.orGate {
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+  position: relative;
+}
+
+.orGate::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 60%;
+  border: 1px solid currentColor;
+  border-right: none;
+  border-radius: 50% 0 0 50%;
+}
+
+/* XOR Gate */
+.xorGate {
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+}
+
+.xorGate::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 50%;
+  border: 1px solid currentColor;
+  border-right: none;
+  border-radius: 50% 0 0 50%;
+}
+
+/* NOT Gate */
+.notGate {
+  clip-path: polygon(0% 0%, 70% 0%, 90% 50%, 70% 100%, 0% 100%);
+  min-width: 80px;
+}
+
+/* === GANTT NODES === */
+
+/* Task Node - project task */
+.taskNode {
+  border-color: #14b8a6;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), var(--background-secondary));
+  min-width: 150px;
+  min-height: 40px;
+  border-radius: var(--border-radius-sm);
+}
+
+.taskNode:hover {
+  border-color: #0d9488;
+}
+
+.taskNode.nodeSelected {
+  border-color: #0f766e;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.2), var(--background-tertiary));
+}
+
+.taskBar {
+  width: 100%;
+  height: 8px;
+  background: rgba(20, 184, 166, 0.2);
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+
+.taskProgress {
+  height: 100%;
+  width: 60%; /* Default progress */
+  background: #14b8a6;
+  border-radius: var(--border-radius-sm);
+}
+
+/* Milestone Node - project milestone */
+.milestoneNode {
+  border-color: #f97316;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), var(--background-secondary));
+  transform: rotate(45deg);
+  border-radius: var(--border-radius-sm);
+  min-width: 60px;
+  min-height: 60px;
+}
+
+.milestoneNode .nodeIcon,
+.milestoneNode .label {
+  transform: rotate(-45deg);
+}
+
+.milestoneNode:hover {
+  border-color: #ea580c;
+}
+
+.milestoneNode.nodeSelected {
+  border-color: #c2410c;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), var(--background-tertiary));
 } 

@@ -22,6 +22,18 @@ import {
   AggregateNode,
   ServiceNode,
   MessageBusNode,
+  StartEndNode,
+  DecisionNode,
+  InputOutputNode,
+  DocumentNode,
+  DatabaseNode,
+  ConnectorNode,
+  AndGateNode,
+  OrGateNode,
+  XorGateNode,
+  NotGateNode,
+  TaskNode,
+  MilestoneNode,
 } from '@/components/common/node-types';
 
 // Helper to generate IDs
@@ -37,6 +49,21 @@ const getDefaultNodeLabel = (type: string): string => {
     messageBus: 'New Message Bus',
     process: 'New Process',
     custom: 'New Node',
+    // Flowchart nodes
+    startEnd: 'Start/End',
+    decision: 'Decision',
+    inputOutput: 'Input/Output',
+    document: 'Document',
+    database: 'Database',
+    connector: 'Connector',
+    // Logic gates
+    andGate: 'AND Gate',
+    orGate: 'OR Gate',
+    xorGate: 'XOR Gate',
+    notGate: 'NOT Gate',
+    // Gantt nodes
+    task: 'Task',
+    milestone: 'Milestone',
   };
   return labels[type] ?? 'New Node';
 };
@@ -61,6 +88,21 @@ export const nodeTypes = {
   aggregate: AggregateNode,
   service: ServiceNode,
   messageBus: MessageBusNode,
+  // Flowchart nodes
+  startEnd: StartEndNode,
+  decision: DecisionNode,
+  inputOutput: InputOutputNode,
+  document: DocumentNode,
+  database: DatabaseNode,
+  connector: ConnectorNode,
+  // Logic gates
+  andGate: AndGateNode,
+  orGate: OrGateNode,
+  xorGate: XorGateNode,
+  notGate: NotGateNode,
+  // Gantt nodes
+  task: TaskNode,
+  milestone: MilestoneNode,
 };
 
 export function useCanvas() {
