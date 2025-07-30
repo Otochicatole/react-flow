@@ -31,6 +31,67 @@
   line-height: 1.5;
 }
 
+.statusMessage {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  margin-top: var(--spacing-sm);
+  transition: all var(--transition-fast);
+}
+
+.statusMessage.success {
+  background: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+.statusMessage.error {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+
+.statusMessage.loading {
+  background: var(--color-info-light);
+  color: var(--color-info);
+  border: 1px solid var(--color-info);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.actionButton {
+  background: var(--background-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+}
+
+.actionButton:hover:not(:disabled) {
+  background: var(--background-elevated);
+  color: var(--text-primary);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.actionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .createButton {
   display: flex;
   align-items: center;
@@ -41,7 +102,7 @@
   border: none;
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
@@ -166,6 +227,38 @@
   min-width: 0;
 }
 
+.projectActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.exportButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.projectCard:hover .exportButton {
+  opacity: 1;
+}
+
+.exportButton:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-primary);
+  transform: scale(1.05);
+}
+
 .projectName {
   font-size: var(--font-size-lg);
   font-weight: 600;
@@ -280,6 +373,12 @@
     font-size: var(--font-size-base);
   }
   
+  .headerActions {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .actionButton,
   .createButton {
     align-self: stretch;
     justify-content: center;
@@ -294,8 +393,12 @@
     align-items: stretch;
   }
   
+  .projectActions {
+    justify-content: flex-end;
+  }
+
+  .exportButton,
   .deleteButton {
-    align-self: flex-end;
     opacity: 1;
   }
   
@@ -315,5 +418,10 @@
   
   .projectCard {
     padding: var(--spacing-md);
+  }
+
+  .actionButton {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-xs);
   }
 } 

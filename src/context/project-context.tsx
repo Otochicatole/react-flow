@@ -5,6 +5,7 @@ import { useProjectStore, type Project, type FlowData, createDefaultProject } fr
 import type { XYPosition } from '@xyflow/react';
 import { type Node, type Edge } from '@xyflow/react';
 import { syncProjectToServer } from '@/services/project-api';
+import { projectRepository, type ProjectExportData } from '@/services/project-repository';
 
 // helper to navigate nested processes
 const getCurrentFlow = (project: Project, processPath: string[]): FlowData => {
@@ -123,6 +124,36 @@ export function useProject() {
     }
   }, [currentProject]);
 
+  // Import/Export functionality
+  const exportAllProjects = useCallback(() => {
+    projectRepository.downloadAllProjects();
+  }, []);
+
+  const exportProject = useCallback((projectId: string) => {
+    projectRepository.downloadProject(projectId);
+  }, []);
+
+  const importProjects = useCallback(async (file: File, merge: boolean = true): Promise<{ success: boolean; message: string; imported: number }> => {
+    try {
+      const data = await projectRepository.readJSONFile(file);
+      const result = projectRepository.importProjects(data, { merge });
+      
+      if (result.success) {
+        // Reload projects from localStorage to reflect changes
+        const updatedProjects = projectRepository.load();
+        dispatch({ type: 'LOAD_PROJECTS', projects: updatedProjects });
+      }
+      
+      return result;
+    } catch (err) {
+      return {
+        success: false,
+        message: err instanceof Error ? err.message : 'Failed to import projects',
+        imported: 0
+      };
+    }
+  }, [dispatch]);
+
   return {
     // state
     projects,
@@ -151,5 +182,9 @@ export function useProject() {
     customNodeTypes: state.customNodeTypes,
     addCustomNodeType,
     removeCustomNodeType,
+    // import/export
+    exportAllProjects,
+    exportProject,
+    importProjects,
   } as const;
 } 
