@@ -148,10 +148,6 @@ export function ProjectHeader() {
             )}
             <span>{isSaving ? 'Saving...' : 'Save'}</span>
           </button>
-          
-          <button className={styles.actionButton} title="Project Settings">
-            <Settings size={18} />
-          </button>
         </div>
       </div>
     </header>

@@ -1,5 +1,5 @@
 'use client'
-import styles from '@/components/styles/delete-project-modal.module.css';
+import styles from '@/components/styles/custom-node-modal.module.css';
 import { X } from 'lucide-react';
 
 interface Usage {
