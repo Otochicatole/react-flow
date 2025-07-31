@@ -208,7 +208,6 @@
   transform: translateY(-1px);
 }
 
-/* Animations */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -253,42 +252,41 @@
   }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .content {
     padding: 0 var(--spacing-lg);
     gap: var(--spacing-md);
   }
-  
+
   .backButton span {
     display: none;
   }
-  
+
   .backButton {
     padding: var(--spacing-md);
     width: 40px;
     height: 40px;
     justify-content: center;
   }
-  
+
   .projectName {
     font-size: var(--font-size-lg);
   }
-  
+
   .stats {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-xs);
   }
-  
+
   .description {
     display: none;
   }
-  
+
   .saveButton span {
     display: none;
   }
-  
+
   .saveButton {
     padding: var(--spacing-md);
     width: 40px;
@@ -296,7 +294,7 @@
     justify-content: center;
     min-width: auto;
   }
-  
+
   .processIndicator {
     font-size: 10px;
     padding: 1px var(--spacing-xs);
@@ -307,26 +305,26 @@
   .content {
     padding: 0 var(--spacing-md);
   }
-  
+
   .header {
     padding: var(--spacing-md) 0;
   }
-  
+
   .projectInfo {
     gap: var(--spacing-xs);
   }
-  
+
   .stats {
     gap: var(--spacing-xs);
   }
-  
+
   .stat:not(:last-child)::after {
     content: '•';
     margin-left: var(--spacing-xs);
     color: var(--text-muted);
   }
-  
+
   .projectNameContainer {
     gap: var(--spacing-sm);
   }
-} 
+}

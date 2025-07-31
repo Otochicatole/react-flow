@@ -45,7 +45,6 @@
   margin: 0;
 }
 
-/* --- scrollable lists --- */
 .nodeList {
   display: flex;
   flex-direction: column;
@@ -142,7 +141,6 @@
   width: 100%;
 }
 
-/* Truncate long labels */
 .nodeLabel {
   font-size: var(--font-size-sm);
   font-weight: 600;
@@ -193,7 +191,6 @@
   color: var(--color-danger);
 }
 
-/* custom section header */
 .headerCustom {
   display: flex;
   align-items: center;
@@ -219,16 +216,12 @@
   transform: scale(1.1);
 }
 
-/* === CATEGORY STYLES === */
-
 .categoriesContainer {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
   margin-bottom: 12px;
 }
-
-
 
 .categorySection {
   border: 1px solid var(--border-color);
@@ -303,9 +296,6 @@
   background: var(--background-secondary);
 }
 
-
-
-/* Responsive Design */
 @media (max-width: 768px) {
   .aside {
     width: 280px;

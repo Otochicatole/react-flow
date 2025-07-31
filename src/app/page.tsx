@@ -122,8 +122,7 @@ export default function Home() {
         message: result.message,
         success: result.success
       });
-      
-      // Clear the input
+
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }

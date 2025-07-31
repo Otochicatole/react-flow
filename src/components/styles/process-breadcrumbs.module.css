@@ -122,26 +122,25 @@
   border-radius: var(--border-radius-sm);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .breadcrumbs {
     padding: var(--spacing-sm) var(--spacing-lg);
     min-height: 40px;
   }
-  
+
   .breadcrumbButton {
     padding: var(--spacing-xs) var(--spacing-sm);
     max-width: 120px;
   }
-  
+
   .label {
     font-size: var(--font-size-xs);
   }
-  
+
   .level {
     display: none;
   }
-  
+
   .info {
     display: none;
   }
@@ -151,17 +150,17 @@
   .breadcrumbs {
     padding: var(--spacing-sm) var(--spacing-md);
   }
-  
+
   .breadcrumbButton {
     padding: var(--spacing-xs);
     max-width: 80px;
   }
-  
+
   .label {
     display: none;
   }
-  
+
   .breadcrumbButton .icon {
     margin: 0;
   }
-} 
+}

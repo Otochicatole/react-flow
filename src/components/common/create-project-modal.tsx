@@ -16,20 +16,18 @@ export function CreateProjectModal({ isOpen, onClose, onSubmit }: CreateProjectM
   const nameInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Reset form when modal opens/closes
   useEffect(() => {
     if (isOpen) {
       setName('');
       setDescription('');
       setIsSubmitting(false);
-      // Focus on name input when modal opens
+
       setTimeout(() => {
         nameInputRef.current?.focus();
       }, 100);
     }
   }, [isOpen]);
 
-  // Handle escape key and click outside
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
@@ -46,7 +44,7 @@ export function CreateProjectModal({ isOpen, onClose, onSubmit }: CreateProjectM
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.addEventListener('mousedown', handleClickOutside);
-      // Prevent body scroll when modal is open
+
       document.body.style.overflow = 'hidden';
     }
 

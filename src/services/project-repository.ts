@@ -1,13 +1,33 @@
+/**
+ * project-repository.ts
+ * -------------------
+ * Repositorio para gestión de proyectos.
+ * Maneja persistencia y operaciones CRUD.
+ */
+
 import type { Project, ProjectExportData } from '@/types';
 import { customNodeRepository } from './custom-node-repository';
 import { getFromStorage, setToStorage } from '@/utils';
 import { STORAGE_KEYS, APP_CONFIG } from '@/constants';
 
-// Re-export for backward compatibility
 export type { ProjectExportData };
 
+/**
+ * Repositorio de proyectos
+ * Singleton con operaciones de persistencia.
+ */
 export const projectRepository = {
+  /**
+   * Carga proyectos de localStorage
+   * Convierte fechas a Date.
+   * 
+   * @returns Lista de proyectos
+   * 
+   * @example
+   * const projects = projectRepository.load();
+   */
   load(): Project[] {
+    // Cargar y parsear fechas
     const projects = getFromStorage<Project[]>(STORAGE_KEYS.PROJECTS, []);
     return projects.map(p => ({
       ...p,
@@ -16,15 +36,32 @@ export const projectRepository = {
     }));
   },
 
+  /**
+   * Guarda proyectos en localStorage
+   * @param projects - Lista a guardar
+   * 
+   * @example
+   * projectRepository.save(projects);
+   */
   save(projects: Project[]) {
     setToStorage(STORAGE_KEYS.PROJECTS, projects);
   },
 
-  // Export all projects and custom nodes
+  /**
+   * Exporta todos los proyectos
+   * Incluye nodos personalizados.
+   * 
+   * @returns Datos de exportación
+   * 
+   * @example
+   * const data = projectRepository.exportAll();
+   */
   exportAll(): ProjectExportData {
+    // Cargar datos
     const projects = this.load();
     const customNodeTypes = customNodeRepository.load();
     
+    // Crear export data
     return {
       projects,
       customNodeTypes,
@@ -33,39 +70,71 @@ export const projectRepository = {
     };
   },
 
-  // Export single project
+  /**
+   * Exporta un proyecto específico
+   * @param projectId - ID del proyecto
+   * @returns Proyecto o null
+   * 
+   * @example
+   * const project = projectRepository.exportProject('123');
+   */
   exportProject(projectId: string): Project | null {
     const projects = this.load();
     return projects.find(p => p.id === projectId) || null;
   },
 
-  // Import projects (merge or replace)
-  importProjects(data: ProjectExportData, options: { merge: boolean } = { merge: true }): { success: boolean; message: string; imported: number } {
+  /**
+   * Importa proyectos desde datos
+   * Puede combinar o reemplazar.
+   * 
+   * @param data - Datos a importar
+   * @param options - Opciones de merge
+   * @returns Resultado de importación
+   * 
+   * @example
+   * const result = projectRepository.importProjects(data, {
+   *   merge: true // Combinar con existentes
+   * });
+   */
+  importProjects(
+    data: ProjectExportData, 
+    options: { merge: boolean } = { merge: true }
+  ): { success: boolean; message: string; imported: number } {
     try {
-      // Validate import data structure
+      // Validar estructura
       if (!data.projects || !Array.isArray(data.projects)) {
-        return { success: false, message: 'Invalid import data: missing projects array', imported: 0 };
+        return { 
+          success: false, 
+          message: 'Invalid import data: missing projects array', 
+          imported: 0 
+        };
       }
 
-      // Validate each project structure
+      // Validar proyectos
       for (const project of data.projects) {
         if (!project.id || !project.name || !project.createdAt || !project.updatedAt) {
-          return { success: false, message: 'Invalid project structure', imported: 0 };
+          return { 
+            success: false, 
+            message: 'Invalid project structure', 
+            imported: 0 
+          };
         }
       }
 
+      // Preparar datos
       let existingProjects = options.merge ? this.load() : [];
       let importedCount = 0;
 
-      // Process imported projects
+      // Parsear fechas
       const importedProjects = data.projects.map(p => ({
         ...p,
         createdAt: new Date(p.createdAt),
         updatedAt: new Date(p.updatedAt),
       }));
 
+      // Merge o reemplazo
       if (options.merge) {
-        // Merge: avoid duplicates by ID, update existing ones
+        // Merge: actualizar existentes y agregar nuevos
         importedProjects.forEach(newProject => {
           const existingIndex = existingProjects.findIndex(p => p.id === newProject.id);
           if (existingIndex >= 0) {
@@ -76,17 +145,18 @@ export const projectRepository = {
           }
         });
       } else {
-        // Replace all
+        // Reemplazo: usar solo importados
         existingProjects = importedProjects;
         importedCount = importedProjects.length;
       }
 
-      // Save to localStorage
+      // Guardar proyectos
       this.save(existingProjects);
 
-      // Import custom node types if available
+      // Procesar nodos personalizados
       if (data.customNodeTypes && Array.isArray(data.customNodeTypes)) {
         if (options.merge) {
+          // Merge de nodos custom
           const existingCustomNodes = customNodeRepository.load();
           const mergedCustomNodes = [...existingCustomNodes];
           
@@ -98,10 +168,12 @@ export const projectRepository = {
           
           customNodeRepository.save(mergedCustomNodes);
         } else {
+          // Reemplazo de nodos custom
           customNodeRepository.save(data.customNodeTypes);
         }
       }
 
+      // Retornar resultado
       return {
         success: true,
         message: options.merge 
@@ -111,6 +183,7 @@ export const projectRepository = {
       };
 
     } catch (err) {
+      // Log y error
       console.error('Import failed:', err);
       return { 
         success: false, 
@@ -120,13 +193,21 @@ export const projectRepository = {
     }
   },
 
-  // Download project as JSON file
+  /**
+   * Descarga un proyecto como JSON
+   * @param projectId - ID del proyecto
+   * 
+   * @example
+   * projectRepository.downloadProject('123');
+   */
   downloadProject(projectId: string) {
+    // Buscar proyecto
     const project = this.exportProject(projectId);
     if (!project) {
       throw new Error('Project not found');
     }
 
+    // Crear export data
     const dataToExport: ProjectExportData = {
       projects: [project],
       customNodeTypes: customNodeRepository.load(),
@@ -134,36 +215,68 @@ export const projectRepository = {
       version: '1.0.0'
     };
 
-    this.downloadJSON(dataToExport, `${project.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_project.json`);
+    // Descargar archivo
+    this.downloadJSON(
+      dataToExport, 
+      `${project.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_project.json`
+    );
   },
 
-  // Download all projects as JSON file
+  /**
+   * Descarga todos los proyectos
+   * Incluye nodos personalizados.
+   * 
+   * @example
+   * projectRepository.downloadAllProjects();
+   */
   downloadAllProjects() {
     const exportData = this.exportAll();
-    this.downloadJSON(exportData, `react_flow_projects_${new Date().toISOString().split('T')[0]}.json`);
+    this.downloadJSON(
+      exportData, 
+      `react_flow_projects_${new Date().toISOString().split('T')[0]}.json`
+    );
   },
 
-  // Helper to trigger JSON download
+  /**
+   * Descarga datos como archivo JSON
+   * @param data - Datos a descargar
+   * @param filename - Nombre del archivo
+   * 
+   * @example
+   * projectRepository.downloadJSON(data, 'export.json');
+   */
   downloadJSON(data: ProjectExportData, filename: string) {
+    // Crear blob
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: 'application/json'
     });
     
+    // Simular click en link
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     document.body.appendChild(link);
     link.click();
+    
+    // Limpiar recursos
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   },
 
-  // Helper to read file and parse JSON
+  /**
+   * Lee archivo JSON de proyecto
+   * @param file - Archivo a leer
+   * @returns Promise con datos
+   * 
+   * @example
+   * const data = await projectRepository.readJSONFile(file);
+   */
   async readJSONFile(file: File): Promise<ProjectExportData> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       
+      // Handler de éxito
       reader.onload = (e) => {
         try {
           const content = e.target?.result as string;
@@ -174,7 +287,10 @@ export const projectRepository = {
         }
       };
       
+      // Handler de error
       reader.onerror = () => reject(new Error('Failed to read file'));
+      
+      // Iniciar lectura
       reader.readAsText(file);
     });
   }

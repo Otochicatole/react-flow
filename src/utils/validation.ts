@@ -1,15 +1,32 @@
+/**
+ * validation.ts
+ * ------------
+ * Utilidades de validación y sanitización.
+ * Type guards y validadores de formato.
+ */
+
 import type { Project, ProjectExportData, CustomNodeType } from '@/types';
 
 /**
- * Validates if an object is a valid Project
- * @param obj - Object to validate
- * @returns True if valid project
+ * Valida si un objeto es un Project válido.
+ * Type guard para asegurar estructura correcta.
+ * 
+ * @param obj - Objeto a validar
+ * @returns true si es Project válido
+ * 
+ * @example
+ * if (isValidProject(data)) {
+ *   // data es Project
+ * }
  */
 export function isValidProject(obj: unknown): obj is Project {
+  // Validar tipo base
   if (!obj || typeof obj !== 'object' || obj === null) return false;
   
+  // Cast para chequear props
   const candidate = obj as Record<string, unknown>;
   
+  // Validar estructura
   return (
     'id' in candidate &&
     'name' in candidate &&
@@ -27,15 +44,25 @@ export function isValidProject(obj: unknown): obj is Project {
 }
 
 /**
- * Validates if an object is valid export data
- * @param obj - Object to validate
- * @returns True if valid export data
+ * Valida si un objeto es ProjectExportData válido.
+ * Type guard para datos de exportación.
+ * 
+ * @param obj - Objeto a validar
+ * @returns true si es ProjectExportData válido
+ * 
+ * @example
+ * if (isValidExportData(imported)) {
+ *   // imported es ProjectExportData
+ * }
  */
 export function isValidExportData(obj: unknown): obj is ProjectExportData {
+  // Validar tipo base
   if (!obj || typeof obj !== 'object' || obj === null) return false;
   
+  // Cast para chequear props
   const candidate = obj as Record<string, unknown>;
   
+  // Validar estructura
   return (
     'projects' in candidate &&
     'customNodeTypes' in candidate &&
@@ -49,15 +76,25 @@ export function isValidExportData(obj: unknown): obj is ProjectExportData {
 }
 
 /**
- * Validates if an object is a valid custom node type
- * @param obj - Object to validate
- * @returns True if valid custom node type
+ * Valida si un objeto es CustomNodeType válido.
+ * Type guard para nodos personalizados.
+ * 
+ * @param obj - Objeto a validar
+ * @returns true si es CustomNodeType válido
+ * 
+ * @example
+ * if (isValidCustomNodeType(node)) {
+ *   // node es CustomNodeType
+ * }
  */
 export function isValidCustomNodeType(obj: unknown): obj is CustomNodeType {
+  // Validar tipo base
   if (!obj || typeof obj !== 'object' || obj === null) return false;
   
+  // Cast para chequear props
   const candidate = obj as Record<string, unknown>;
   
+  // Validar estructura
   return (
     'name' in candidate &&
     'dir' in candidate &&
@@ -67,22 +104,35 @@ export function isValidCustomNodeType(obj: unknown): obj is CustomNodeType {
 }
 
 /**
- * Sanitizes a project name for file naming
- * @param name - Project name to sanitize
- * @returns Sanitized filename
+ * Sanitiza un nombre de archivo.
+ * Remueve caracteres inválidos y normaliza.
+ * 
+ * @param name - Nombre original
+ * @returns Nombre sanitizado
+ * 
+ * @example
+ * const safe = sanitizeFilename('My File!.txt');
+ * // my_file_txt
  */
 export function sanitizeFilename(name: string): string {
   return name
-    .replace(/[^a-z0-9]/gi, '_')
-    .replace(/_+/g, '_')
-    .replace(/^_|_$/g, '')
-    .toLowerCase();
+    .replace(/[^a-z0-9]/gi, '_') // Solo alfanuméricos
+    .replace(/_+/g, '_')         // No _ repetidos
+    .replace(/^_|_$/g, '')       // No _ al inicio/fin
+    .toLowerCase();              // Todo minúsculas
 }
 
 /**
- * Validates an email address
- * @param email - Email to validate
- * @returns True if valid email
+ * Valida formato de email.
+ * Usa regex simple pero efectiva.
+ * 
+ * @param email - Email a validar
+ * @returns true si el formato es válido
+ * 
+ * @example
+ * if (isValidEmail(input)) {
+ *   // Email válido
+ * }
  */
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,9 +140,16 @@ export function isValidEmail(email: string): boolean {
 }
 
 /**
- * Validates a project name
- * @param name - Project name to validate
- * @returns True if valid name
+ * Valida nombre de proyecto.
+ * Chequea longitud y espacios.
+ * 
+ * @param name - Nombre a validar
+ * @returns true si el nombre es válido
+ * 
+ * @example
+ * if (isValidProjectName(input)) {
+ *   // Nombre válido
+ * }
  */
 export function isValidProjectName(name: string): boolean {
   return name.trim().length > 0 && name.trim().length <= 100;

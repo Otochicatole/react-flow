@@ -33,7 +33,6 @@ export function ContextMenu({
   const menuRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Adjust position to keep menu within viewport bounds
   useEffect(() => {
     if (isOpen && menuRef.current) {
       const rect = menuRef.current.getBoundingClientRect();
@@ -42,18 +41,15 @@ export function ContextMenu({
       
       let newX = position.x;
       let newY = position.y;
-      
-      // Check if menu goes beyond right edge
+
       if (position.x + rect.width > viewportWidth) {
-        newX = viewportWidth - rect.width - 10; // 10px margin
+
       }
-      
-      // Check if menu goes beyond bottom edge
+
       if (position.y + rect.height > viewportHeight) {
-        newY = viewportHeight - rect.height - 10; // 10px margin
+
       }
-      
-      // Ensure menu doesn't go beyond left or top edges
+
       newX = Math.max(10, newX);
       newY = Math.max(10, newY);
       
@@ -77,13 +73,12 @@ export function ContextMenu({
     if (isEditing && textareaRef.current) {
       textareaRef.current.focus();
       textareaRef.current.select();
-      // Auto-resize textarea based on content
+
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
   }, [isEditing]);
 
-  // Reset editing state when context menu opens/closes or selection changes
   useEffect(() => {
     if (isOpen) {
       const label = selectedNode?.data?.label || selectedEdge?.label || '';
@@ -95,20 +90,19 @@ export function ContextMenu({
     }
   }, [isOpen, selectedNode, selectedEdge]);
 
-  // Auto-resize textarea as user types
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditLabel(e.target.value);
-    // Auto-resize
+
     e.target.style.height = 'auto';
     e.target.style.height = e.target.scrollHeight + 'px';
   };
 
   const handleLabelSubmit = useCallback(() => {
     if (selectedNode && onEditNodeLabel) {
-      // Save even if empty (allows clearing labels)
+
       onEditNodeLabel(selectedNode.id, editLabel.trim());
     } else if (selectedEdge && onEditEdgeLabel) {
-      // Save edge label (allow empty labels for edges)
+
       onEditEdgeLabel(selectedEdge.id, editLabel.trim());
     }
     setIsEditing(false);
@@ -118,7 +112,7 @@ export function ContextMenu({
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as HTMLElement)) {
-        // If we're editing, save the changes before closing
+
         if (isEditing) {
           handleLabelSubmit();
         } else {
@@ -138,7 +132,7 @@ export function ContextMenu({
     }
 
     if (isOpen) {
-      // Add a small delay to prevent the opening click from immediately closing the menu
+
       const timeoutId = setTimeout(() => {
         document.addEventListener('mousedown', handleClickOutside, { capture: true });
         document.addEventListener('keydown', handleEscape);
@@ -166,14 +160,14 @@ export function ContextMenu({
   };
 
   const handleLabelKeyDown = (event: React.KeyboardEvent) => {
-    // Ctrl/Cmd + Enter to submit and close
+
     if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();
       handleLabelSubmit();
     } else if (event.key === 'Escape') {
       setIsEditing(false);
     }
-    // Regular Enter adds a new line (default textarea behavior)
+
   };
 
   const handleDeleteNode = () => {

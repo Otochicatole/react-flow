@@ -189,7 +189,6 @@
   cursor: not-allowed;
 }
 
-/* Animations */
 @keyframes overlayAppear {
   from {
     opacity: 0;
@@ -212,7 +211,6 @@
   }
 }
 
-/* Mobile responsive */
 @media (max-width: 768px) {
   .overlay {
     padding: var(--spacing-md);

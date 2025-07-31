@@ -13,7 +13,7 @@
     padding: var(--spacing-lg);
     animation: overlayAppear var(--transition-fast) ease-out;
   }
-  
+
   .modal {
     background: var(--background-elevated);
     border: 1px solid var(--border-color);
@@ -25,7 +25,7 @@
     overflow: hidden;
     animation: modalAppear var(--transition-medium) ease-out;
   }
-  
+
   .header {
     display: flex;
     align-items: center;
@@ -33,7 +33,7 @@
     padding: var(--spacing-xl);
     border-bottom: 1px solid var(--border-color);
   }
-  
+
   .closeButton {
     display: flex;
     align-items: center;
@@ -47,12 +47,12 @@
     cursor: pointer;
     transition: all var(--transition-fast);
   }
-  
+
   .closeButton:hover {
     background: var(--background-tertiary);
     color: var(--text-primary);
   }
-  
+
   .content {
     padding-left: 12px;
     padding-right: 12px;
@@ -63,7 +63,7 @@
     gap: var(--spacing-lg);
     overflow-y: auto;
   }
-  
+
   .title {
     font-size: var(--font-size-xl);
     font-weight: 600;
@@ -89,4 +89,3 @@
   .item:active{
     background: var(--background-elevated);
   }
-  

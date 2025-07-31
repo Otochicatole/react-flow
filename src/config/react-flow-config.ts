@@ -1,62 +1,84 @@
+/**
+ * react-flow-config.ts
+ * -----------------
+ * Configuración por defecto de React Flow.
+ * Define comportamiento y estilos base.
+ */
+
 import type { ReactFlowProps } from '@xyflow/react';
 
 /**
- * Default React Flow configuration
+ * Configuración principal
+ * Props por defecto para ReactFlow.
+ * 
+ * @property fitView - Auto-ajustar vista
+ * @property nodesDraggable - Permitir arrastrar nodos
+ * @property nodesConnectable - Permitir conectar nodos
+ * @property elementsSelectable - Permitir selección
+ * @property deleteKeyCode - Teclas para eliminar
+ * @property minZoom/maxZoom - Límites de zoom
+ * @property snapToGrid - Ajuste a grilla
  */
 export const DEFAULT_REACT_FLOW_CONFIG: Partial<ReactFlowProps> = {
-  // Canvas settings
+  // Vista
   fitView: true,
   fitViewOptions: {
-    padding: 0.2,
+    padding: 0.2, // Padding al ajustar
   },
-  
-  // Interaction settings
-  nodesDraggable: true,
-  nodesConnectable: true,
-  elementsSelectable: true,
-  selectNodesOnDrag: false,
-  
-  // Connection settings
-  // connectionMode: 'loose', // Commented out due to type issues
+
+  // Interacción
+  nodesDraggable: true,    // Drag & drop
+  nodesConnectable: true,  // Conexiones
+  elementsSelectable: true,// Selección
+  selectNodesOnDrag: false,// No seleccionar al arrastrar
+
+  // Teclas
   deleteKeyCode: ['Backspace', 'Delete'],
-  
-  // Zoom settings
-  minZoom: 0.1,
-  maxZoom: 2,
-  
-  // Grid settings
-  snapToGrid: false,
-  snapGrid: [15, 15],
-  
-  // Controls
+
+  // Zoom
+  minZoom: 0.1, // Min 10%
+  maxZoom: 2,   // Max 200%
+
+  // Grilla
+  snapToGrid: false,    // Sin snap
+  snapGrid: [15, 15],   // Tamaño 15x15
+
+  // UI
   attributionPosition: 'bottom-left' as const,
 };
 
 /**
- * Default viewport configuration
+ * Viewport por defecto
+ * Posición y zoom inicial.
  */
 export const DEFAULT_VIEWPORT = {
-  x: 0,
-  y: 0,
-  zoom: 1,
+  x: 0,     // Centro X
+  y: 0,     // Centro Y
+  zoom: 1,  // 100%
 };
 
 /**
- * Default edge configuration
+ * Configuración de conexiones
+ * Estilo por defecto para edges.
+ * 
+ * @property type - Tipo de línea
+ * @property animated - Animación
+ * @property style - Estilos CSS
  */
 export const DEFAULT_EDGE_CONFIG = {
-  type: 'smoothstep',
-  animated: false,
+  type: 'smoothstep',  // Líneas cuadradas
+  animated: false,     // Sin animación
   style: {
-    strokeWidth: 2,
-    stroke: '#64748b',
+    strokeWidth: 2,    // Grosor 2px
+    stroke: '#64748b', // Color slate-500
   },
 };
 
 /**
- * Default node position for new nodes
+ * Posición inicial de nodos
+ * Coordenadas por defecto.
  */
 export const DEFAULT_NODE_POSITION = {
-  x: 0,
-  y: 0,
+  x: 0,  // Centro X
+  y: 0,  // Centro Y
 };

@@ -48,7 +48,6 @@ body {
   line-height: 1.5;
 }
 
-/* Remove default button styles */
 button {
   border: none;
   background: none;
@@ -56,7 +55,6 @@ button {
   font-family: inherit;
 }
 
-/* Remove default input styles */
 input,
 textarea {
   border: none;

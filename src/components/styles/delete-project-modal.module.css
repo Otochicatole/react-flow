@@ -173,7 +173,7 @@
 }
 
 .deleteButton:hover {
-  background: #dc2626; /* darker red */
+  background: #dc2626;
   border-color: #dc2626;
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
@@ -183,7 +183,6 @@
   transform: translateY(0);
 }
 
-/* Animations */
 @keyframes overlayAppear {
   from {
     opacity: 0;
@@ -204,34 +203,33 @@
   }
 }
 
-/* Mobile responsive */
 @media (max-width: 768px) {
   .overlay {
     padding: var(--spacing-md);
   }
-  
+
   .modal {
     max-width: none;
     width: 100%;
   }
-  
+
   .header,
   .content,
   .actions {
     padding: var(--spacing-lg);
   }
-  
+
   .projectInfo {
     flex-direction: column;
     gap: var(--spacing-md);
   }
-  
+
   .actions {
     flex-direction: column;
   }
-  
+
   .cancelButton,
   .deleteButton {
     width: 100%;
   }
-} 
+}

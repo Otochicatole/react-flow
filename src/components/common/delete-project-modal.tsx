@@ -14,7 +14,6 @@ interface DeleteProjectModalProps {
 export function DeleteProjectModal({ isOpen, project, onClose, onConfirm }: DeleteProjectModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Handle escape key and click outside
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
@@ -31,7 +30,7 @@ export function DeleteProjectModal({ isOpen, project, onClose, onConfirm }: Dele
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.addEventListener('mousedown', handleClickOutside);
-      // Prevent body scroll when modal is open
+
       document.body.style.overflow = 'hidden';
     }
 

@@ -2,7 +2,6 @@
   background: linear-gradient(135deg, var(--color-info) 0%, var(--color-info-light) 100%);
   border: 2px solid var(--color-info);
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
   min-width: 180px;
   min-height: 120px;
   position: relative;
@@ -12,7 +11,7 @@
   color: var(--color-white);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  overflow: visible;
 }
 
 .processNode:hover {
@@ -26,7 +25,6 @@
   box-shadow: 0 0 0 2px var(--color-primary);
 }
 
-/* Layered effect */
 .processNode::before {
   content: '';
   position: absolute;
@@ -142,7 +140,6 @@
   opacity: 1;
 }
 
-/* Handles */
 .handle {
   background: var(--color-white);
   border: 2px solid var(--color-info);
@@ -154,6 +151,10 @@
 }
 
 .processNode:hover .handle {
+  opacity: 1;
+}
+
+.processNode .handle:hover {
   opacity: 1;
 }
 
@@ -182,28 +183,26 @@
 }
 
 .handle:hover {
-  transform: scale(1.2);
   background: var(--color-primary);
   border-color: var(--color-primary);
 }
 
 .handle[data-handlepos="top"]:hover {
-  transform: translateX(-50%) scale(1.2);
+  transform: translateX(-50%);
 }
 
 .handle[data-handlepos="bottom"]:hover {
-  transform: translateX(-50%) scale(1.2);
+  transform: translateX(-50%);
 }
 
 .handle[data-handlepos="left"]:hover {
-  transform: translateY(-50%) scale(1.2);
+  transform: translateY(-50%);
 }
 
 .handle[data-handlepos="right"]:hover {
-  transform: translateY(-50%) scale(1.2);
+  transform: translateY(-50%);
 }
 
-/* Animations */
 @keyframes pulseGlow {
   0%, 100% {
     box-shadow: var(--shadow-md);
@@ -217,23 +216,57 @@
   animation: pulseGlow 0.3s ease-in-out;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .processNode {
     min-width: 150px;
     min-height: 100px;
     padding: var(--spacing-md);
   }
-  
+
   .title {
     font-size: var(--font-size-sm);
   }
-  
+
   .description {
     -webkit-line-clamp: 1;
   }
-  
+
   .doubleClickHint {
     display: none;
   }
-} 
+}
+
+.mainContent {
+  padding: var(--spacing-lg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.executionSection {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  min-height: 32px;
+  position: relative;
+
+}
+
+.executionHandle {
+  background: #d97706;
+  border: 2px solid #b45309;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  z-index: 15;
+}
+
+.executionHandle:hover {
+  background: #f59e0b;
+  z-index: 20;
+  opacity: 1;
+}

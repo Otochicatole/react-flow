@@ -27,7 +27,6 @@ import {
     const params = useParams<{ project: string }>();
     const projectId = params.project;
 
-    // ensure correct project selected on refresh
     useEffect(() => {
       if (
         projectId &&
@@ -38,18 +37,19 @@ import {
       }
     }, [projectId, projects, currentProject, selectProject]);
 
-    const {
-      nodes,
-      edges,
-      onNodesChange,
-      onEdgesChange,
-      onConnect,
-      nodeTypes,
-      deleteNode,
-      deleteEdge,
-      updateNodeLabel,
-      updateEdgeLabel
-    } = useCanvas();
+      const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    isValidConnection,
+    nodeTypes,
+    deleteNode,
+    deleteEdge,
+    updateNodeLabel,
+    updateEdgeLabel
+  } = useCanvas();
 
     const [contextMenu, setContextMenu] = useState<{
       isOpen: boolean;
@@ -162,6 +162,7 @@ import {
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
+              isValidConnection={isValidConnection}
               nodeTypes={nodeTypes}
               onNodeContextMenu={handleNodeContextMenu}
               onEdgeContextMenu={handleEdgeContextMenu}

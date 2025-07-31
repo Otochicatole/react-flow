@@ -1,6 +1,5 @@
-/* Base node styles */
+
 .node {
-  padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
   min-width: 100px;
   max-width: 300px;
@@ -9,12 +8,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-xs);
   border: 1px solid var(--border-color);
   background: var(--background-secondary);
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow: visible;
 }
 
 .node:hover {
@@ -26,13 +24,11 @@
   background: var(--background-tertiary);
 }
 
-/* Node icon styling */
 .nodeIcon {
   font-size: 16px;
   line-height: 1;
 }
 
-/* Node label styling */
 .label {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
@@ -46,7 +42,6 @@
   max-width: 100%;
 }
 
-/* Handle styles */
 .handle {
   background: var(--color-neutral-600);
   border: 1px solid var(--background-secondary);
@@ -64,6 +59,11 @@
 
 .handle:hover {
   background: var(--color-primary);
+  opacity: 1;
+}
+
+.node:hover .executionHandle {
+  opacity: 1 !important;
 }
 
 .handleSource {
@@ -74,7 +74,6 @@
   background: var(--color-danger);
 }
 
-/* Event Node - triggers */
 .eventNode {
   border-color: #3b82f6;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), var(--background-secondary));
@@ -89,7 +88,6 @@
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), var(--background-tertiary));
 }
 
-/* Command Node - actions */
 .commandNode {
   border-color: #f59e0b;
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), var(--background-secondary));
@@ -104,7 +102,6 @@
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), var(--background-tertiary));
 }
 
-/* Query Node - data retrieval */
 .queryNode {
   border-color: #10b981;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), var(--background-secondary));
@@ -119,7 +116,6 @@
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), var(--background-tertiary));
 }
 
-/* Aggregate Node - domain entities */
 .aggregateNode {
   border-color: #8b5cf6;
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), var(--background-secondary));
@@ -134,7 +130,6 @@
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), var(--background-tertiary));
 }
 
-/* Service Node - application services */
 .serviceNode {
   border-color: #ef4444;
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), var(--background-secondary));
@@ -149,7 +144,6 @@
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), var(--background-tertiary));
 }
 
-/* Message Bus Node - communication */
 .messageBusNode {
   border-color: #06b6d4;
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), var(--background-secondary));
@@ -164,9 +158,6 @@
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), var(--background-tertiary));
 }
 
-/* === FLOWCHART NODES === */
-
-/* Start Node - beginning of flow */
 .startNode {
   border-color: #34d399;
   background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), var(--background-secondary));
@@ -183,7 +174,6 @@
   background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), var(--background-tertiary));
 }
 
-/* End Node - termination of flow */
 .endNode {
   border-color: #ef4444;
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), var(--background-secondary));
@@ -200,7 +190,6 @@
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), var(--background-tertiary));
 }
 
-/* Decision Node - conditional branching */
 .decisionNode {
   background: #d4a574;
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
@@ -242,9 +231,6 @@
   font-weight: 600;
 }
 
-
-
-/* Input/Output Node - data flow */
 .inputOutputNode {
   border-color: #a78bfa;
   background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), var(--background-secondary));
@@ -261,7 +247,6 @@
   background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), var(--background-tertiary));
 }
 
-/* Text Input Node - generic text input */
 .textInputNode {
   border-color: #22d3ee;
   background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), var(--background-secondary));
@@ -300,7 +285,6 @@
   background: #0891b2;
 }
 
-/* Document Node - documentation */
 .documentNode {
   border-color: #94a3b8;
   background: linear-gradient(135deg, rgba(148, 163, 184, 0.1), var(--background-secondary));
@@ -329,7 +313,6 @@
   background: linear-gradient(135deg, rgba(148, 163, 184, 0.2), var(--background-tertiary));
 }
 
-/* Database Node - data storage */
 .databaseNode {
   border-color: #fb7185;
   background: linear-gradient(135deg, rgba(251, 113, 133, 0.1), var(--background-secondary));
@@ -358,7 +341,6 @@
   background: linear-gradient(135deg, rgba(251, 113, 133, 0.2), var(--background-tertiary));
 }
 
-/* Connector Node - junction point */
 .connectorNode {
   border-color: #6b7280;
   background: var(--background-tertiary);
@@ -377,8 +359,6 @@
   border-color: var(--color-primary);
   background: var(--background-elevated);
 }
-
-/* === LOGIC GATE NODES === */
 
 .logicGateNode {
   border-color: #60a5fa;
@@ -405,12 +385,10 @@
   letter-spacing: 0.05em;
 }
 
-/* AND Gate */
 .andGate {
   border-radius: 0 var(--border-radius-full) var(--border-radius-full) 0;
 }
 
-/* OR Gate */
 .orGate {
   border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
   position: relative;
@@ -429,7 +407,6 @@
   border-radius: 50% 0 0 50%;
 }
 
-/* XOR Gate */
 .xorGate {
   border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
 }
@@ -447,15 +424,11 @@
   border-radius: 50% 0 0 50%;
 }
 
-/* NOT Gate */
 .notGate {
   clip-path: polygon(0% 0%, 70% 0%, 90% 50%, 70% 100%, 0% 100%);
   min-width: 80px;
 }
 
-/* === GANTT NODES === */
-
-/* Task Node - project task */
 .taskNode {
   border-color: #14b8a6;
   background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), var(--background-secondary));
@@ -484,12 +457,11 @@
 
 .taskProgress {
   height: 100%;
-  width: 60%; /* Default progress */
+  width: 60%;
   background: #14b8a6;
   border-radius: var(--border-radius-sm);
 }
 
-/* Milestone Node - project milestone */
 .milestoneNode {
   background: #c4885a;
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
@@ -531,4 +503,3 @@
   font-weight: 600;
 }
 
- 

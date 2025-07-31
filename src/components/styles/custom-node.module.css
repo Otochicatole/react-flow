@@ -1,5 +1,4 @@
 .node {
-  padding: var(--spacing-md) var(--spacing-xl);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   background: var(--background-secondary);
@@ -7,6 +6,9 @@
   text-align: center;
   transition: border-color var(--transition-fast);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
 }
 
 .node:hover {
@@ -29,13 +31,13 @@
   position: absolute;
 }
 
-/* Show handles only on node hover */
 .node:hover .handle {
   opacity: 1;
 }
 
 .handle:hover {
   background: var(--color-primary);
+  opacity: 1;
 }
 
 .handleSource {
@@ -46,27 +48,26 @@
   background: var(--color-danger);
 }
 
-/* Proper handle positioning - touching the node edges */
 .handle[data-handlepos="top"] {
-  top: -4px;
+  top: -3px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .handle[data-handlepos="bottom"] {
-  bottom: -4px;
+  bottom: -3px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .handle[data-handlepos="left"] {
-  left: -4px;
+  left: -3px;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .handle[data-handlepos="right"] {
-  right: -4px;
+  right: -3px;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -82,4 +83,36 @@
 
 .label p{
   color: #7e771f;
+}
+
+.mainContent {
+  padding: var(--spacing-md) var(--spacing-xl);
+  flex: 1;
+}
+
+.executionSection {
+  border-top: 1px solid var(--border-color-subtle);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  min-height: 24px;
+  position: relative;
+
+}
+
+.executionHandle {
+  background: #d97706;
+  border: 2px solid #b45309;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  z-index: 15;
+}
+
+.executionHandle:hover {
+  background: #f59e0b;
+  z-index: 20;
+  opacity: 1;
 }
