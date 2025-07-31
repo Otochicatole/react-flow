@@ -62,6 +62,20 @@
   stroke-width: 20px !important;
 }
 
+/* Edge labels - dark background with white text, no padding */
+.react-flow__edge-text {
+  fill: rgb(116, 165, 120) !important;
+}
+
+.react-flow__edge-textbg {
+  fill: #00000086 !important;
+  stroke: rgba(255, 255, 255, 0.1) !important;
+  stroke-width: 0.5px !important;
+  rx: 4px !important;
+  ry: 4px !important;
+}
+
+
 /* Connection line */
 .react-flow__connection-line {
   stroke: var(--color-primary) !important;
@@ -75,11 +89,9 @@
 }
 
 .react-flow__background.dots {
-  background-image: radial-gradient(
-    circle,
-    var(--color-neutral-800) 1px,
-    transparent 1px
-  ) !important;
+  background-image: radial-gradient(circle,
+      var(--color-neutral-800) 1px,
+      transparent 1px) !important;
 }
 
 /* Pane */
@@ -99,4 +111,4 @@
 .react-flow__selection {
   background: var(--color-primary-light) !important;
   border: 1px solid var(--color-primary) !important;
-} 
+}

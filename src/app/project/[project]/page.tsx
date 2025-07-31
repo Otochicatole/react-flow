@@ -47,7 +47,8 @@ import {
       nodeTypes,
       deleteNode,
       deleteEdge,
-      updateNodeLabel
+      updateNodeLabel,
+      updateEdgeLabel
     } = useCanvas();
 
     const [contextMenu, setContextMenu] = useState<{
@@ -172,7 +173,13 @@ import {
             >
               <Controls />
               <MiniMap />
-              <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+              <Background
+                id="fine-grid"
+                gap={20}
+                size={0.5}
+                color="rgba(59, 59, 59, 0.08)"
+                variant={BackgroundVariant.Lines}
+              />
               <DragDropHandler />
             </ReactFlow>
             
@@ -185,6 +192,7 @@ import {
               onDeleteNode={deleteNode}
               onDeleteEdge={deleteEdge}
               onEditNodeLabel={updateNodeLabel}
+              onEditEdgeLabel={updateEdgeLabel}
             />
             <CustomNodeUsageModal isOpen={usageModal.isOpen} nodeName={usageModal.nodeName} usages={usageModal.usages} onClose={() => setUsageModal(prev=>({...prev,isOpen:false}))} onSelect={handleUsageSelect} />
           </div>

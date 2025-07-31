@@ -13,6 +13,7 @@ export interface ContextMenuProps {
   onDeleteNode?: (nodeId: string) => void;
   onDeleteEdge?: (edgeId: string) => void;
   onEditNodeLabel?: (nodeId: string, newLabel: string) => void;
+  onEditEdgeLabel?: (edgeId: string, newLabel: string) => void;
 }
 
 export function ContextMenu({
@@ -23,7 +24,8 @@ export function ContextMenu({
   selectedEdge,
   onDeleteNode,
   onDeleteEdge,
-  onEditNodeLabel
+  onEditNodeLabel,
+  onEditEdgeLabel
 }: ContextMenuProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editLabel, setEditLabel] = useState('');
@@ -62,10 +64,14 @@ export function ContextMenu({
   }, [isOpen, position]);
 
   useEffect(() => {
-    if (selectedNode && isEditing) {
-      setEditLabel(String(selectedNode.data.label || ''));
+    if (isEditing) {
+      if (selectedNode) {
+        setEditLabel(String(selectedNode.data.label || ''));
+      } else if (selectedEdge) {
+        setEditLabel(String(selectedEdge.label || ''));
+      }
     }
-  }, [selectedNode, isEditing]);
+  }, [selectedNode, selectedEdge, isEditing]);
 
   useEffect(() => {
     if (isEditing && textareaRef.current) {
@@ -76,6 +82,18 @@ export function ContextMenu({
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
   }, [isEditing]);
+
+  // Reset editing state when context menu opens/closes or selection changes
+  useEffect(() => {
+    if (isOpen) {
+      const label = selectedNode?.data?.label || selectedEdge?.label || '';
+      setEditLabel(String(label));
+      setIsEditing(false);
+    } else {
+      setIsEditing(false);
+      setEditLabel('');
+    }
+  }, [isOpen, selectedNode, selectedEdge]);
 
   // Auto-resize textarea as user types
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -89,10 +107,13 @@ export function ContextMenu({
     if (selectedNode && onEditNodeLabel) {
       // Save even if empty (allows clearing labels)
       onEditNodeLabel(selectedNode.id, editLabel.trim());
-      setIsEditing(false);
-      onClose();
+    } else if (selectedEdge && onEditEdgeLabel) {
+      // Save edge label (allow empty labels for edges)
+      onEditEdgeLabel(selectedEdge.id, editLabel.trim());
     }
-  }, [selectedNode, onEditNodeLabel, editLabel, onClose]);
+    setIsEditing(false);
+    onClose();
+  }, [selectedNode, selectedEdge, onEditNodeLabel, onEditEdgeLabel, editLabel, onClose]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -138,6 +159,8 @@ export function ContextMenu({
 
   const handleEditClick = () => {
     if (selectedNode) {
+      setIsEditing(true);
+    } else if (selectedEdge) {
       setIsEditing(true);
     }
   };
@@ -216,13 +239,40 @@ export function ContextMenu({
       )}
 
       {selectedEdge && (
-        <button
-          className={styles.menuItem}
-          onClick={handleDeleteEdge}
-        >
-          <Trash2 size={16} />
-          <span>Delete Connection</span>
-        </button>
+        <>
+          {isEditing ? (
+            <div className={styles.editContainer}>
+              <textarea
+                ref={textareaRef}
+                value={editLabel}
+                onChange={handleTextareaChange}
+                onKeyDown={handleLabelKeyDown}
+                onBlur={handleLabelSubmit}
+                className={styles.editTextarea}
+                placeholder="Connection label...&#10;(Ctrl+Enter to save)"
+                rows={1}
+              />
+              <div className={styles.editHint}>
+                Ctrl+Enter to save, Esc to cancel
+              </div>
+            </div>
+          ) : (
+            <button
+              className={styles.menuItem}
+              onClick={handleEditClick}
+            >
+              <Edit3 size={16} />
+              <span>{selectedEdge.label ? 'Edit Label' : 'Add Label'}</span>
+            </button>
+          )}
+          <button
+            className={styles.menuItem}
+            onClick={handleDeleteEdge}
+          >
+            <Trash2 size={16} />
+            <span>Delete Connection</span>
+          </button>
+        </>
       )}
     </div>
   );

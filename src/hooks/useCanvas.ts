@@ -203,6 +203,16 @@ export function useCanvas() {
     [nodes, dispatch],
   );
 
+  const updateEdgeLabel = useCallback(
+    (edgeId: string, newLabel: string) => {
+      const updatedEdges = edges.map(e =>
+        e.id === edgeId ? { ...e, label: newLabel } : e,
+      );
+      dispatch({ type: 'UPDATE_EDGES', edges: updatedEdges });
+    },
+    [edges, dispatch],
+  );
+
   return {
     nodes,
     edges,
@@ -213,6 +223,7 @@ export function useCanvas() {
     deleteNode,
     deleteEdge,
     updateNodeLabel,
+    updateEdgeLabel,
     nodeTypes,
   } as const;
 } 
