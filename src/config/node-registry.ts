@@ -7,7 +7,8 @@ import {
   AggregateNode,
   ServiceNode,
   MessageBusNode,
-  StartEndNode,
+  StartNode,
+  EndNode,
   DecisionNode,
   InputOutputNode,
   TextInputNode,
@@ -40,7 +41,8 @@ export const NODE_TYPE_REGISTRY = {
   messageBus: MessageBusNode,
   
   // Flowchart nodes
-  startEnd: StartEndNode,
+  start: StartNode,
+  end: EndNode,
   decision: DecisionNode,
   inputOutput: InputOutputNode,
   textInput: TextInputNode,

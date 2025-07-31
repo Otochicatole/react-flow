@@ -12,7 +12,8 @@ export const NODE_LABELS: Record<NodeType, string> = {
   custom: 'New Node',
   
   // Flowchart nodes
-  startEnd: 'Start/End',
+  start: 'Start',
+  end: 'End',
   decision: 'Decision',
   inputOutput: 'Input/Output',
   textInput: 'Text Input',
@@ -43,7 +44,8 @@ export const NODE_DESCRIPTIONS: Record<NodeType, string> = {
   custom: 'Custom user-defined node type',
   
   // Flowchart nodes
-  startEnd: 'Terminal points for process flow',
+  start: 'Beginning point of process flow',
+  end: 'Termination point of process flow',
   decision: 'Conditional branching point',
   inputOutput: 'Data input or output operation',
   textInput: 'Generic text input field',

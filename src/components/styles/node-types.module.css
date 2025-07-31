@@ -166,21 +166,38 @@
 
 /* === FLOWCHART NODES === */
 
-/* Start/End Node - terminal points */
-.startEndNode {
+/* Start Node - beginning of flow */
+.startNode {
   border-color: #34d399;
   background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), var(--background-secondary));
   border-radius: var(--border-radius-full);
   min-width: 120px;
 }
 
-.startEndNode:hover {
+.startNode:hover {
   border-color: #10b981;
 }
 
-.startEndNode.nodeSelected {
+.startNode.nodeSelected {
   border-color: #059669;
   background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), var(--background-tertiary));
+}
+
+/* End Node - termination of flow */
+.endNode {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-full);
+  min-width: 120px;
+}
+
+.endNode:hover {
+  border-color: #dc2626;
+}
+
+.endNode.nodeSelected {
+  border-color: #b91c1c;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), var(--background-tertiary));
 }
 
 /* Decision Node - conditional branching */

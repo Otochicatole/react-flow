@@ -181,10 +181,11 @@ export function MessageBusNode({ data, selected }: BaseNodeProps) {
 
 // === FLOWCHART NODES ===
 
-// Start/End Node - terminal points
-export function StartEndNode({ data, selected }: BaseNodeProps) {
+// Start Node - beginning of flow
+export function StartNode({ data, selected }: BaseNodeProps) {
   return (
-    <div className={`${styles.node} ${styles.startEndNode} ${selected ? styles.nodeSelected : ''}`}>
+    <div className={`${styles.node} ${styles.startNode} ${selected ? styles.nodeSelected : ''}`}>
+      {/* Only output handles for start node */}
       <Handle
         type="source"
         position={Position.Right}
@@ -192,13 +193,38 @@ export function StartEndNode({ data, selected }: BaseNodeProps) {
         className={`${styles.handle} ${styles.handleSource}`}
       />
       <Handle
+        type="source"
+        position={Position.Bottom}
+        id="bottom"
+        className={`${styles.handle} ${styles.handleSource}`}
+      />
+      <div className={styles.nodeIcon}>
+        <Play size={16} />
+      </div>
+      <div className={styles.label}>{data.label}</div>
+    </div>
+  );
+}
+
+// End Node - termination of flow
+export function EndNode({ data, selected }: BaseNodeProps) {
+  return (
+    <div className={`${styles.node} ${styles.endNode} ${selected ? styles.nodeSelected : ''}`}>
+      {/* Only input handles for end node */}
+      <Handle
         type="target"
         position={Position.Left}
         id="left"
         className={`${styles.handle} ${styles.handleTarget}`}
       />
+      <Handle
+        type="target"
+        position={Position.Top}
+        id="top"
+        className={`${styles.handle} ${styles.handleTarget}`}
+      />
       <div className={styles.nodeIcon}>
-        <Play size={16} />
+        <Square size={16} />
       </div>
       <div className={styles.label}>{data.label}</div>
     </div>

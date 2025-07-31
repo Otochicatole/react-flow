@@ -82,11 +82,18 @@ export const NODE_CATEGORIES: NodeCategory[] = [
     description: 'Traditional flowchart elements',
     nodes: [
       {
-        type: 'startEnd',
-        label: 'Start/End',
+        type: 'start',
+        label: 'Start',
         icon: <Play size={18} />,
-        description: 'Terminal points for process flow',
+        description: 'Beginning point of process flow',
         color: '#34d399'
+      },
+      {
+        type: 'end',
+        label: 'End',
+        icon: <Square size={18} />,
+        description: 'Termination point of process flow',
+        color: '#ef4444'
       },
       {
         type: 'decision',
