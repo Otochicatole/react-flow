@@ -213,7 +213,3 @@ npm run build
 3. Commit tus cambios (`git commit -m 'Add amazing feature'`)
 4. Push a la rama (`git push origin feature/amazing`)
 5. Abre un Pull Request
-
-## Licencia
-
-MIT
