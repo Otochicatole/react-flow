@@ -18,6 +18,32 @@ Aplicación para crear diagramas de flujo complejos con procesos anidados y nodo
 - **TypeScript**: Tipado estático
 - **CSS Modules**: Estilos modulares
 
+## Configuración
+
+### React Flow
+- Nodos arrastrables y conectables
+- Elementos seleccionables
+- Zoom: 10% - 200%
+- Grilla: 15x15 (opcional)
+- Teclas de borrado: Backspace, Delete
+- Auto-ajuste de vista (padding: 0.2)
+- Minimap con fondo blanco transparente
+
+### Conexiones
+- Data Flow: Líneas cuadradas (smoothstep)
+- Execution Flow: Líneas curvas (default)
+- Validación de tipos de conexión
+- Transiciones suaves
+- Estilos de hover personalizados
+
+### Nodos
+- Handles ocultos por defecto
+- Visibles en hover
+- Posición inicial centrada
+- Etiquetas editables
+- Subprocesos navegables
+- Handles de ejecución en subnodos
+
 ## Estructura del Proyecto
 
 ```
@@ -90,15 +116,20 @@ src/
 ## Flujos y Conexiones
 
 ### Flujo de Datos
-- Conexiones cuadradas simétricas
-- Color azul (#3b82f6)
+- Conexiones cuadradas simétricas (smoothstep)
+- Color gris claro (#bbbbbb69)
+- Hover blanco (#ffffff)
 - Solo conecta puntos de datos
+- Radio de curvas: 10px
+- Transición suave (0.2s)
 
 ### Flujo de Ejecución
 - Conexiones curvas con animación
 - Color naranja (#d97706)
+- Hover naranja claro (#f59e0b)
 - Solo conecta puntos de ejecución
-- Toggle para mostrar/ocultar
+- Toggle para mostrar/ocultar (off por defecto)
+- Línea punteada animada (dash)
 
 ## Estado Global
 
@@ -152,16 +183,28 @@ npm run build
    - Agregar tipo en `types/node.ts`
    - Crear componente en `components/common/node-types.tsx`
    - Agregar a categoría en `constants/node-categories.tsx`
+   - Definir etiqueta por defecto en `useCanvas.ts`
+   - Agregar al registro en `config/node-registry.ts`
 
 2. **Nueva Categoría**
    - Agregar categoría en `constants/node-categories.tsx`
    - Definir ícono y descripción
    - Agregar nodos relacionados
+   - Actualizar estilos en `styles/node-types.module.css`
 
 3. **Nuevo Tipo de Flujo**
    - Agregar handles en componentes de nodo
    - Definir estilos en `styles/react-flow-overrides.css`
    - Actualizar validación en `useCanvas.ts`
+   - Configurar tipo de línea en `config/react-flow-config.ts`
+   - Agregar detección en `onConnect` de `useCanvas.ts`
+
+4. **Nuevo Tipo de Conexión**
+   - Definir tipo en `types/flow.ts`
+   - Agregar validación en `isValidConnection`
+   - Configurar estilos en `react-flow-overrides.css`
+   - Agregar clase CSS específica
+   - Configurar animaciones si necesario
 
 ## Contribuir
 
