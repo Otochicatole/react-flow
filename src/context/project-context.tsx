@@ -1,21 +1,14 @@
 'use client'
 
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { useProjectStore, type Project, type FlowData, createDefaultProject } from '@/context/project-store';
+import { useProjectStore, createDefaultProject } from '@/context/project-store';
 import type { XYPosition } from '@xyflow/react';
 import { type Node, type Edge } from '@xyflow/react';
 import { syncProjectToServer } from '@/services/project-api';
 import { projectRepository } from '@/services/project-repository';
+import type { Project, FlowData } from '@/types';
 
-// helper to navigate nested processes
-const getCurrentFlow = (project: Project, processPath: string[]): FlowData => {
-  if (processPath.length === 0) return project;
-  let current: FlowData = project;
-  for (const pid of processPath) {
-    current = current.processes[pid];
-  }
-  return current;
-};
+import { getCurrentFlow } from '@/utils';
 
 // Re-export types from project-store
 export type { Project, FlowData } from '@/context/project-store';

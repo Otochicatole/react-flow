@@ -1,38 +1,23 @@
-import { Project } from '@/context/project-store';
-import { customNodeRepository, type StoredCustomNode } from './custom-node-repository';
+import type { Project, ProjectExportData } from '@/types';
+import { customNodeRepository } from './custom-node-repository';
+import { getFromStorage, setToStorage } from '@/utils';
+import { STORAGE_KEYS, APP_CONFIG } from '@/constants';
 
-const STORAGE_KEY = 'react-flow-projects';
-
-export interface ProjectExportData {
-  projects: Project[];
-  customNodeTypes: StoredCustomNode[];
-  exportedAt: Date;
-  version: string;
-}
+// Re-export for backward compatibility
+export type { ProjectExportData };
 
 export const projectRepository = {
   load(): Project[] {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (!stored) return [];
-      const parsed = JSON.parse(stored) as Project[];
-      return parsed.map(p => ({
-        ...p,
-        createdAt: new Date(p.createdAt),
-        updatedAt: new Date(p.updatedAt),
-      }));
-    } catch (err) {
-      console.warn('Failed to load projects', err);
-      return [];
-    }
+    const projects = getFromStorage<Project[]>(STORAGE_KEYS.PROJECTS, []);
+    return projects.map(p => ({
+      ...p,
+      createdAt: new Date(p.createdAt),
+      updatedAt: new Date(p.updatedAt),
+    }));
   },
 
   save(projects: Project[]) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-    } catch (err) {
-      console.warn('Failed to save projects', err);
-    }
+    setToStorage(STORAGE_KEYS.PROJECTS, projects);
   },
 
   // Export all projects and custom nodes
@@ -44,7 +29,7 @@ export const projectRepository = {
       projects,
       customNodeTypes,
       exportedAt: new Date(),
-      version: '1.0.0'
+      version: APP_CONFIG.VERSION
     };
   },
 

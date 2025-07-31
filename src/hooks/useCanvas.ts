@@ -12,7 +12,9 @@ import {
   type Edge,
 } from '@xyflow/react';
 import { useProjectStore } from '@/context/project-store';
-import type { Project, FlowData } from '@/context/project-store';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { Project, FlowData } from '@/types';
+import { getCurrentFlow } from '@/utils';
 import { CustomNode } from '@/components/common/custom-node';
 import { ProcessNode } from '@/components/common/process-node';
 import {
@@ -70,15 +72,7 @@ const getDefaultNodeLabel = (type: string): string => {
   return labels[type] ?? 'New Node';
 };
 
-// compute flow helper (similar to old getCurrentFlow)
-function getCurrentFlow(project: Project, processPath: string[]): FlowData {
-  if (processPath.length === 0) return project;
-  let current: FlowData = project;
-  for (const pid of processPath) {
-    current = current.processes[pid];
-  }
-  return current;
-}
+// getCurrentFlow is now imported from utils/flow-helpers.ts
 
 // Node types configuration (re-used)
 export const nodeTypes = {

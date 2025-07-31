@@ -3,42 +3,18 @@ import { createContext, useReducer, ReactNode, useContext, useEffect } from 'rea
 import { type Node, type Edge, type XYPosition } from '@xyflow/react';
 import { projectRepository } from '@/services/project-repository';
 import { customNodeRepository } from '@/services/custom-node-repository';
+import { generateProjectId } from '@/utils';
+import type { Project, ProjectState, FlowData, ProcessFlow } from '@/types';
 
-// ---------- TYPES ----------
-export interface FlowData {
-  nodes: Node[];
-  edges: Edge[];
-  processes: { [processId: string]: ProcessFlow };
-}
-
-export interface ProcessFlow extends FlowData {
-  id: string;
-  name: string;
-  description?: string;
-}
-
-export interface Project extends FlowData {
-  id: string;
-  name: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface ProjectState {
-  projects: Project[];
-  currentProject: Project | null;
-  currentProcessPath: string[]; // nested process IDs
-  past: Project[]; // history for undo
-  future: Project[]; // history for redo
-  customNodeTypes: {name:string;dir:'in'|'out'}[];
-}
-
-// ---------- HELPERS ----------
+// Helper to generate IDs  
 const generateId = (prefix: string) => `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
+// Re-export types for backward compatibility
+export type { Project, ProjectState, FlowData, ProcessFlow } from '@/types';
+
+// ---------- HELPERS ----------
 export const createDefaultProject = (name: string, description?: string): Project => ({
-  id: generateId('project'),
+  id: generateProjectId(),
   name,
   description,
   createdAt: new Date(),

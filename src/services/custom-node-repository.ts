@@ -1,19 +1,17 @@
-const STORAGE_KEY = 'react-flow-custom-nodes';
+import { STORAGE_KEYS } from '@/constants';
+import { getFromStorage, setToStorage } from '@/utils';
+
+// Use constant instead of magic string
+const STORAGE_KEY = STORAGE_KEYS.CUSTOM_NODES;
 
 export interface StoredCustomNode { name: string; dir: 'in' | 'out'; }
 
 export const customNodeRepository = {
   load(): StoredCustomNode[] {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
+    return getFromStorage<StoredCustomNode[]>(STORAGE_KEY, []);
   },
+
   save(nodes: StoredCustomNode[]) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(nodes));
-    } catch {}
+    setToStorage(STORAGE_KEY, nodes);
   },
 }; 
