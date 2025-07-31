@@ -10,15 +10,16 @@
 .react-flow__edge.data-edge .react-flow__edge-path {
   stroke: #bbbbbb69 !important;
   stroke-width: 2px !important;
+  transition: all 0.2s ease !important;
+  stroke-linecap: round !important;
+  /* Ajustes para conexiones cuadradas */
+  --edge-radius: 10px;
+  --edge-path: path('M 0,0 C 50,0 50,100 100,100');
 }
 
 .react-flow__edge.data-edge:hover .react-flow__edge-path {
   stroke: #ffffff !important;
   stroke-width: 3px !important;
-}
-
-.react-flow__edge.data-edge .react-flow__edge-path {
-  stroke-linecap: round !important;
 }
 
 .react-flow__edge.execution-edge .react-flow__edge-path {
