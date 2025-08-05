@@ -16,11 +16,9 @@ const STORAGE_KEY = STORAGE_KEYS.CUSTOM_NODES;
 /**
  * Nodo personalizado almacenado
  * @property name - Nombre único del nodo
- * @property dir - Dirección del flujo
  */
-export interface StoredCustomNode { 
-  name: string;       // Nombre único
-  dir: 'in' | 'out'; // Dirección
+export interface StoredCustomNode {
+  name: string; // Nombre único
 }
 
 /**
@@ -31,9 +29,6 @@ export const customNodeRepository = {
   /**
    * Carga nodos personalizados
    * @returns Lista de nodos custom
-   * 
-   * @example
-   * const nodes = customNodeRepository.load();
    */
   load(): StoredCustomNode[] {
     return getFromStorage<StoredCustomNode[]>(STORAGE_KEY, []);
@@ -42,11 +37,8 @@ export const customNodeRepository = {
   /**
    * Guarda nodos personalizados
    * @param nodes - Lista a guardar
-   * 
-   * @example
-   * customNodeRepository.save(nodes);
    */
   save(nodes: StoredCustomNode[]) {
     setToStorage(STORAGE_KEY, nodes);
   },
-}; 
+};

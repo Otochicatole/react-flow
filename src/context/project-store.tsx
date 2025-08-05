@@ -471,7 +471,7 @@ export function ProjectStoreProvider({ children }: { children: ReactNode }) {
     // Cargar nodos custom
     const customNodes = customNodeRepository.load();
     customNodes.forEach(node => 
-      dispatch({ type: 'ADD_CUSTOM_NODE_TYPE', node })
+      dispatch({ type: 'ADD_CUSTOM_NODE_TYPE', node: { name: (node as { name: string }).name } })
     );
   }, []);
 
