@@ -1,0 +1,14 @@
+.inputOutputNode {
+  border-color: #a78bfa;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), var(--background-secondary));
+  min-width: 120px;
+}
+
+.inputOutputNode:hover {
+  border-color: #8b5cf6;
+}
+
+.inputOutputNode.nodeSelected {
+  border-color: #7c3aed;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), var(--background-tertiary));
+}

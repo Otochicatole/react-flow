@@ -1,0 +1,13 @@
+.queryNode {
+  border-color: #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), var(--background-secondary));
+}
+
+.queryNode:hover {
+  border-color: #059669;
+}
+
+.queryNode.nodeSelected {
+  border-color: #047857;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), var(--background-tertiary));
+}

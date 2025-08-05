@@ -1,0 +1,18 @@
+.connectorNode {
+  border-color: #6b7280;
+  background: var(--background-tertiary);
+  border-radius: var(--border-radius-full);
+  min-width: 24px;
+  min-height: 24px;
+  padding: var(--spacing-xs);
+}
+
+.connectorNode:hover {
+  border-color: #4b5563;
+  background: var(--background-elevated);
+}
+
+.connectorNode.nodeSelected {
+  border-color: var(--color-primary);
+  background: var(--background-elevated);
+}

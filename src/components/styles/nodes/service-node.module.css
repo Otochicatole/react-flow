@@ -1,0 +1,13 @@
+.serviceNode {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), var(--background-secondary));
+}
+
+.serviceNode:hover {
+  border-color: #dc2626;
+}
+
+.serviceNode.nodeSelected {
+  border-color: #b91c1c;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), var(--background-tertiary));
+}

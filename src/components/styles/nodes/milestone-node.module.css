@@ -1,0 +1,17 @@
+.milestoneNode {
+  border-color: #a87449;
+  background: linear-gradient(135deg, rgba(196, 136, 90, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-md);
+
+}
+
+.milestoneNode:hover {
+  border-color: #98673d;
+}
+
+.milestoneNode.nodeSelected {
+  background: linear-gradient(135deg, rgba(196, 136, 90, 0.2), var(--background-tertiary));
+  border-color: #8c5f37;
+}
+
+

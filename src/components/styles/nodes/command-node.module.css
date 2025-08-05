@@ -1,0 +1,13 @@
+.commandNode {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), var(--background-secondary));
+}
+
+.commandNode:hover {
+  border-color: #d97706;
+}
+
+.commandNode.nodeSelected {
+  border-color: #b45309;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), var(--background-tertiary));
+}

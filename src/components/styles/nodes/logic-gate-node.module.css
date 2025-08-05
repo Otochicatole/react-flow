@@ -1,0 +1,68 @@
+.logicGateNode {
+  border-color: #60a5fa;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), var(--background-secondary));
+  min-width: 100px;
+  min-height: 60px;
+  position: relative;
+}
+
+.logicGateNode:hover {
+  border-color: #3b82f6;
+}
+
+.logicGateNode.nodeSelected {
+  border-color: #2563eb;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), var(--background-tertiary));
+}
+
+.logicGateLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.andGate {
+  border-radius: 0 var(--border-radius-full) var(--border-radius-full) 0;
+}
+
+.orGate {
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+  position: relative;
+}
+
+.orGate::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 60%;
+  border: 1px solid currentColor;
+  border-right: none;
+  border-radius: 50% 0 0 50%;
+}
+
+.xorGate {
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+}
+
+.xorGate::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 50%;
+  border: 1px solid currentColor;
+  border-right: none;
+  border-radius: 50% 0 0 50%;
+}
+
+.notGate {
+  clip-path: polygon(0% 0%, 70% 0%, 90% 50%, 70% 100%, 0% 100%);
+  min-width: 80px;
+}

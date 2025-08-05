@@ -1,0 +1,15 @@
+.startNode {
+  border-color: #34d399;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-full);
+  min-width: 120px;
+}
+
+.startNode:hover {
+  border-color: #10b981;
+}
+
+.startNode.nodeSelected {
+  border-color: #059669;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), var(--background-tertiary));
+}

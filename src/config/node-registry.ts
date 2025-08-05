@@ -35,7 +35,7 @@ import {
   // Project
   TaskNode,
   MilestoneNode,
-} from '@/components/common/node-types';
+} from '@/components/common/nodes';
 
 /**
  * Registro de tipos de nodo

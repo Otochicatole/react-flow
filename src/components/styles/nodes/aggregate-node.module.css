@@ -1,0 +1,13 @@
+.aggregateNode {
+  border-color: #8b5cf6;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), var(--background-secondary));
+}
+
+.aggregateNode:hover {
+  border-color: #7c3aed;
+}
+
+.aggregateNode.nodeSelected {
+  border-color: #6d28d9;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), var(--background-tertiary));
+}

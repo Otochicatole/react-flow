@@ -1,7 +1,6 @@
 
 export { default as customNodeStyles } from './custom-node.module.css';
 export { default as projectPageStyles } from './project-page.module.css';
-export { default as nodeTypesStyles } from './node-types.module.css';
 export { default as asideStyles } from './aside.module.css';
 export { default as contextMenuStyles } from './context-menu.module.css';
 export { default as homePageStyles } from './home-page.module.css';

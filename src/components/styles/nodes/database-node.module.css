@@ -1,0 +1,27 @@
+.databaseNode {
+  border-color: #fb7185;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-md);
+  position: relative;
+}
+
+.databaseNode::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 10px;
+  right: 10px;
+  height: 6px;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.3), rgba(251, 113, 133, 0.1));
+  border-radius: 50%;
+  border: 1px solid #fb7185;
+}
+
+.databaseNode:hover {
+  border-color: #f43f5e;
+}
+
+.databaseNode.nodeSelected {
+  border-color: #e11d48;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.2), var(--background-tertiary));
+}

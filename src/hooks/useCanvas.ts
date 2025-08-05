@@ -65,7 +65,7 @@ import {
   // Nodos de proceso
   TaskNode,         // Tareas
   MilestoneNode,    // Hitos
-} from '@/components/common/node-types';
+} from '@/components/common/nodes';
 
 /**
  * Genera un ID único para nodos y conexiones.

@@ -1,0 +1,37 @@
+.textInputNode {
+  border-color: #22d3ee;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), var(--background-secondary));
+  border-radius: var(--border-radius-md);
+  min-width: 140px;
+  min-height: 50px;
+  padding: var(--spacing-md);
+  position: relative;
+}
+
+.textInputNode::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: #22d3ee;
+  border-radius: var(--border-radius-xs);
+}
+
+.textInputNode:hover {
+  border-color: #06b6d4;
+}
+
+.textInputNode:hover::after {
+  background: #06b6d4;
+}
+
+.textInputNode.nodeSelected {
+  border-color: #0891b2;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), var(--background-tertiary));
+}
+
+.textInputNode.nodeSelected::after {
+  background: #0891b2;
+}
