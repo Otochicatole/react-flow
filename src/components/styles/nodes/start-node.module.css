@@ -1,7 +1,7 @@
 .startNode {
   border-color: #34d399;
   background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), var(--background-secondary));
-  border-radius: var(--border-radius-full);
+  border-radius: 2px 2px 2px 2px;
   min-width: 120px;
 }
 

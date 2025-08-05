@@ -1,8 +1,8 @@
 .endNode {
   border-color: #ef4444;
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), var(--background-secondary));
-  border-radius: var(--border-radius-full);
   min-width: 120px;
+  border-radius: 2px 2px 2px 2px;
 }
 
 .endNode:hover {
