@@ -16,11 +16,13 @@ export function StartNode({ data, selected }: BaseNodeProps) {
         <div className={styles.nodeIcon}><Play size={16} /></div>
         <div className={styles.label}>{data.label}</div>
       </div>
-      {state.showExecutionFlow && (
-        <div className={executionStyles.executionSection}>
+      <div
+        className={executionStyles.executionSection}
+        style={{ opacity: state.showExecutionFlow ? 1 : 0, pointerEvents: state.showExecutionFlow ? 'auto' : 'none' }}
+      >
           <Handle type="source" position={Position.Right} id="exec-out" className={`${styles.handle} ${executionStyles.executionHandle}`} />
         </div>
-      )}
+
     </div>
   );
 }

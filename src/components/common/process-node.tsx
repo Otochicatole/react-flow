@@ -135,9 +135,11 @@ export function ProcessNode({ data, selected }: ProcessNodeProps) {
         </div>
       </div>
 
-      {/* Sección de flujo de ejecución (condicional) */}
-      {state.showExecutionFlow && (
-        <div className={styles.executionSection}>
+      {/* Sección de flujo de ejecución (siempre montada, visible según toggle) */}
+      <div
+        className={styles.executionSection}
+        style={{ opacity: state.showExecutionFlow ? 1 : 0, pointerEvents: state.showExecutionFlow ? 'auto' : 'none' }}
+      >
           {/* Entrada de ejecución (izquierda) */}
           <Handle
             type="target"
@@ -157,7 +159,6 @@ export function ProcessNode({ data, selected }: ProcessNodeProps) {
             style={{ top: '50%', transform: 'translateY(-50%)', right: '-8px' }}
           />
         </div>
-      )}
     </div>
   );
 } 

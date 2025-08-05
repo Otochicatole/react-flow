@@ -16,12 +16,14 @@ export function ConnectorNode({ selected }: { selected?: boolean }) {
         <Handle type="source" position={Position.Right} id="data-right" className={`${styles.handle} ${styles.handleSource}`} />
         <div className={styles.nodeIcon}><Circle size={8} /></div>
       </div>
-      {state.showExecutionFlow && (
-        <div className={executionStyles.executionSection}>
+      <div
+        className={executionStyles.executionSection}
+        style={{ opacity: state.showExecutionFlow ? 1 : 0, pointerEvents: state.showExecutionFlow ? 'auto' : 'none' }}
+      >
           <Handle type="target" position={Position.Left} id="exec-in" className={`${styles.handle} ${executionStyles.executionHandle}`} />
           <Handle type="source" position={Position.Right} id="exec-out" className={`${styles.handle} ${executionStyles.executionHandle}`} />
         </div>
-      )}
+
     </div>
   );
 }

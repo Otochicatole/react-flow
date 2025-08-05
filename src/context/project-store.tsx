@@ -12,7 +12,7 @@ import { createContext, useReducer, ReactNode, useContext, useEffect } from 'rea
 import { type Node, type Edge, type XYPosition } from '@xyflow/react';
 import { projectRepository } from '@/services/project-repository';
 import { customNodeRepository } from '@/services/custom-node-repository';
-import { generateProjectId } from '@/utils';
+import { generateProjectId, getFromStorage, setToStorage } from '@/utils';
 import type { Project, ProjectState, FlowData, ProcessFlow } from '@/types';
 
 /**
@@ -443,6 +443,12 @@ const ProjectStoreContext = createContext<StoreValue | undefined>(undefined);
  * Maneja estado global y persistencia.
  */
 export function ProjectStoreProvider({ children }: { children: ReactNode }) {
+  // Recuperar preferencia de flujo de ejecución persistida
+  const initialShowExecutionFlow =
+    typeof window !== 'undefined'
+      ? getFromStorage<boolean>('showExecutionFlow', false)
+      : false;
+
   // Inicializar reducer
   const [state, dispatch] = useReducer(reducer, {
     projects: [],             // Lista de proyectos
@@ -451,7 +457,7 @@ export function ProjectStoreProvider({ children }: { children: ReactNode }) {
     past: [],                // Historial undo
     future: [],              // Historial redo
     customNodeTypes: [],     // Nodos custom
-    showExecutionFlow: false, // Toggle ejecución
+    showExecutionFlow: initialShowExecutionFlow, // Toggle ejecución (persistido)
   });
 
   // Cargar datos al montar
@@ -478,6 +484,11 @@ export function ProjectStoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     customNodeRepository.save(state.customNodeTypes);
   }, [state.customNodeTypes]);
+
+  // Persistir preferencia de flujo de ejecución
+  useEffect(() => {
+    setToStorage('showExecutionFlow', state.showExecutionFlow);
+  }, [state.showExecutionFlow]);
 
   // Proveer contexto
   return (

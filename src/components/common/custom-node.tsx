@@ -187,9 +187,11 @@ export function CustomNode({ data, selected }: CustomNodeProps) {
         </div>
       </div>
 
-      {/* Sección de flujo de ejecución (condicional) */}
-      {state.showExecutionFlow && (
-        <div className={styles.executionSection}>
+      {/* Sección de flujo de ejecución (siempre montada, visible según toggle) */}
+      <div
+        className={styles.executionSection}
+        style={{ opacity: state.showExecutionFlow ? 1 : 0, pointerEvents: state.showExecutionFlow ? 'auto' : 'none' }}
+      >
           {/* Punto de entrada de ejecución */}
           <Handle
             type="target"
@@ -208,7 +210,6 @@ export function CustomNode({ data, selected }: CustomNodeProps) {
             data-handlepos="right"
           />
         </div>
-      )}
 
       {/* Puntos de conexión inferiores */}
       {data.dir === 'out' ? (

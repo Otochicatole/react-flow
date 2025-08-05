@@ -28,8 +28,10 @@ export function EventNode({ data, selected }: BaseNodeProps) {
       </div>
 
       {/* Execution flow handles (conditional) */}
-      {state.showExecutionFlow && (
-        <div className={executionStyles.executionSection}>
+      <div
+        className={executionStyles.executionSection}
+        style={{ opacity: state.showExecutionFlow ? 1 : 0, pointerEvents: state.showExecutionFlow ? 'auto' : 'none' }}
+      >
           <Handle
             type="target"
             position={Position.Left}
@@ -43,7 +45,7 @@ export function EventNode({ data, selected }: BaseNodeProps) {
             className={`${styles.handle} ${executionStyles.executionHandle}`}
           />
         </div>
-      )}
+
     </div>
   );
 }
