@@ -20,7 +20,7 @@ export function DatabaseNode({ data, selected }: BaseNodeProps) {
       </div>
       <div
         className={executionStyles.executionSection}
-        style={{ display: state.showExecutionFlow ? 'flex' : 'none' }}
+        style={{ opacity: state.showExecutionFlow ? 1 : 0, pointerEvents: state.showExecutionFlow ? 'auto' : 'none' }}
       >
           <Handle type="target" position={Position.Left} id="exec-in" className={`${styles.handle} ${executionStyles.executionHandle}`} />
           <Handle type="source" position={Position.Right} id="exec-out" className={`${styles.handle} ${executionStyles.executionHandle}`} />

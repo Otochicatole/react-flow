@@ -57,7 +57,6 @@ export interface ProjectState {
  */
 export interface CustomNodeType {
   name: string;        // Nombre único
-  dir: 'in' | 'out';  // Dirección
 }
 
 /**

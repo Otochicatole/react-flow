@@ -192,7 +192,7 @@ export function useProject() {
   /**
    * Gestión de nodos personalizados
    */
-  const addCustomNodeType = useCallback((node: {name:string;dir:'in'|'out'}) => {
+  const addCustomNodeType = useCallback((node: { name: string }) => {
     dispatch({ type: 'ADD_CUSTOM_NODE_TYPE', node });
   }, [dispatch]);
 

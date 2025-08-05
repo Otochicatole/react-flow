@@ -63,7 +63,7 @@ import {
       selectedEdge: null
     });
 
-    type Usage = { path: string; dir: 'in' | 'out'; idPath: string[] };
+    type Usage = { path: string; idPath: string[] };
     const [usageModal, setUsageModal] = useState<{isOpen:boolean; nodeName:string; usages:Usage[]}>({isOpen:false,nodeName:'',usages:[]});
 
     useEffect(() => {
@@ -74,21 +74,17 @@ import {
 
         const traverse = (flow: FlowData, breadcrumb: string[], idBreadcrumb: string[]) => {
           let foundInCurrent = false;
-          let inDir: 'in' | 'out' | null = null;
+          
 
           flow.nodes.forEach(n => {
             if (n.type === 'custom' && (n.data as { customName?: string }).customName === targetName) {
               foundInCurrent = true;
-              const id = n.id;
-              const hasIn = edges.some(ed => ed.target === id);
-              const hasOut = edges.some(ed => ed.source === id);
-              if (hasIn && !hasOut) inDir = 'in';
-              else if (!hasIn && hasOut) inDir = 'out';
-              else inDir = 'in';
+              
+              
             }
           });
 
-          if (foundInCurrent && inDir) usages.push({ path: breadcrumb.join(' > '), dir: inDir, idPath: idBreadcrumb });
+          if (foundInCurrent) usages.push({ path: breadcrumb.join(' > '), idPath: idBreadcrumb });
 
           Object.values(flow.processes).forEach(proc => {
             const p = proc as FlowData & { id: string; name: string };

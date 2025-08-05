@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 
 interface Usage {
   path: string;
-  dir: 'in' | 'out';
+
   idPath: string[];
 }
 
@@ -32,7 +32,7 @@ export function CustomNodeUsageModal({ isOpen, nodeName, usages, onClose, onSele
             <ul className={styles.list}>
               {usages.map((u, idx) => (
                 <li key={idx} className={styles.item} onClick={() => onSelect(u.idPath)}>
-                  {u.dir === 'in' ? '<-' : '->'} {u.path}
+                  • {u.path}
                 </li>
               ))}
             </ul>

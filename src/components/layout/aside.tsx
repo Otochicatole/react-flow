@@ -220,14 +220,14 @@ export function Aside() {
 
         {/* Lista de nodos personalizados */}
         <div className={styles.categoryNodes}>
-          {customNodeTypes.map(({name, dir}) => (
+          {customNodeTypes.map(({name}) => (
             <div className={styles.draggableNodeWrapper} key={name}>
               {/* Nodo arrastrable */}
               <DraggableNode
-                type={`custom::${name}::${dir}`}
+                type={`custom::${name}`}
                 label={name}
                 icon={<Layers size={18} />}
-                description={`Custom ${dir === 'in' ? 'input' : 'output'} node`}
+                description={`Custom node`}
                 color="#64748b"
               />
               {/* Botón de eliminar */}

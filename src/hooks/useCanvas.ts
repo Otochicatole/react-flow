@@ -267,13 +267,13 @@ export function useCanvas() {
       if (!currentProject) return;
 
       if (type.startsWith('custom::')) {
-        // Nodo personalizado (formato: custom::nombre::direccion)
-        const [,customName,dir] = type.split('::');
+        // Nodo personalizado (formato: custom::nombre)
+        const [, customName] = type.split('::');
         const newNode = {
           id: generateId('node'),
           type: 'custom',
           position,
-          data: { label: customName, customName, dir },
+          data: { label: customName, customName },
         } as Node;
         dispatch({ type: 'UPDATE_NODES', nodes: [...nodes, newNode] });
 

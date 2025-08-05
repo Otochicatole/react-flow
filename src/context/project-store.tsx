@@ -126,7 +126,7 @@ export type ProjectAction =
   | { type: 'REDO' }
   
   // Nodos custom
-  | { type: 'ADD_CUSTOM_NODE_TYPE'; node: {name:string;dir:'in'|'out'} }
+  | { type: 'ADD_CUSTOM_NODE_TYPE'; node: { name: string } }
   | { type: 'REMOVE_CUSTOM_NODE_TYPE'; name: string }
   
   // Flujo de ejecución
