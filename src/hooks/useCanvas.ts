@@ -228,7 +228,7 @@ export function useCanvas() {
       // Configuramos los datos y estilos según el tipo
       const edgeData = {
         ...params,
-        type: isExecutionFlow ? 'default' : 'smoothstep', // Volvemos a smoothstep para data flow
+        type: isExecutionFlow ? 'straight' : 'default', // Make data flow edges curved like execution flow
         data: { 
           connectionType: isExecutionFlow ? 'execution' : 'data' 
         },

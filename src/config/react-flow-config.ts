@@ -66,7 +66,7 @@ export const DEFAULT_VIEWPORT = {
  * @property style - Estilos CSS
  */
 export const DEFAULT_EDGE_CONFIG = {
-  type: 'smoothstep',  // Líneas cuadradas simétricas
+  type: 'default',  // Líneas cuadradas simétricas
   animated: false,     // Sin animación
   style: {
     strokeWidth: 2,    // Grosor 2px
